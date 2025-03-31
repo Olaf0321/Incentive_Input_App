@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
   },
   header: {
     alignItems: "center",
-    marginBottom: 20,
+    marginBottom: 120,
   },
   headerText: {
     fontSize: 22,
@@ -73,6 +73,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderRadius: 10,
     paddingHorizontal: 10,
+    marginBottom: 30
   },
   buttonText: {
     color: "#FFFFFF",

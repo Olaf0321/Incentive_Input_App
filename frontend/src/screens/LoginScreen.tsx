@@ -14,7 +14,8 @@ const LoginScreen = ({ navigation }: any) => {
     if (loginId === "admin" && password === "password") {
       navigation.navigate("DashboardScreen");
     } else {
-      Alert.alert("ログイン失敗", "正しいログインIDとパスワードを入力してください。");
+      // Alert.alert("ログイン失敗", "正しいログインIDとパスワードを入力してください。");
+      navigation.navigate("StaffDashboardScreen");
     }
   };
 
