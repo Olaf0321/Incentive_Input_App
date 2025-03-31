@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   SafeAreaView,
+  Alert
 } from "react-native";
 
 const AreaBusinessRegistrationScreen = ({ navigation }: any) => {
@@ -16,6 +17,10 @@ const AreaBusinessRegistrationScreen = ({ navigation }: any) => {
   const handleRegister = () => {
     // Handle registration logic
     console.log("Registered:", { className, loginId, password });
+    if (className == "") Alert.alert("Please enter classname");
+    else if (loginId == "") Alert.alert("Please enter loginId");
+    else if (password == "") Alert.alert("Please enter password");
+    else Alert.alert("Correctly registered!");
   };
 
   return (
@@ -35,7 +40,7 @@ const AreaBusinessRegistrationScreen = ({ navigation }: any) => {
           onChangeText={setClassName}
         />
       </View>
-      
+
       <View style={styles.inputContainer}>
         <Text style={styles.label}>ログインID登録</Text>
         <TextInput
