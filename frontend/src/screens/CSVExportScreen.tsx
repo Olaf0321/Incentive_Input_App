@@ -3,24 +3,22 @@ import { View, Text, TouchableOpacity, StyleSheet, Dimensions } from "react-nati
 
 const { width } = Dimensions.get("window");
 
-const DashboardScreen = ({ navigation }: any) => {
+const CSVExportScreen = ({ navigation }: any) => {
   const buttons = [
-    { title: "エリア及び事業\n登録", screen: "AreaBusinessRegistrationScreen" },
-    { title: "スタッフ登録\n社員・バイト", screen: "StaffRegistrationScreen" },
-    { title: "インセンティブ項目設定", screen: "IncentiveSettingsScreen" },
-    { title: "内容閲覧・全体・各教室・編集\nCSV出力", screen: "ContentViewScreen" },
-    { title: "上期締め切り\n上期データクリア", screen: "FirstHalfClearScreen" },
-    // { title: "下期締め切り\n下期データクリア", screen: "StaffDashboardScreen" },
-    { title: "下期締め切り\n下期データクリア", screen: "SecondHalfClearScreen" },
+    { title: "上期一括\nCSV出力", screen: "FirstHalfCSVOutputScreen" },
+    { title: "下期一括\nCSV出力", screen: "SecondHalfCSVOutputScreen" },
+    { title: "上期エリア、\n事業ごと\nCSV出力", screen: "FirstHalfAreaCSVOutputScreen" },
+    { title: "下期エリア、\n事業ごと\nCSV出力", screen: "SecondHalfAreaCSVOutputScreen" },
+    { title: "上期個別\nCSV出力", screen: "FirstHalfIndividualCSVOutputScreen" },
+    { title: "下期個別\nCSV出力", screen: "SecondHalfIndividualCSVOutputScreen" },
   ];
 
   return (
     <View style={styles.container}>
       {/* Header */}
-      <View style={styles.header}>
-        <Text style={styles.headerText}>インセンティブ入力アプリ</Text>
-        <Text style={styles.subtitle}>マスタ</Text>
-      </View>
+    <Text style={styles.headerText}>内容閲覧・全体・各教室・編集・CSV出力</Text>
+    <Text style={styles.subtitle}>CSV出力</Text>
+      
 
       {/* Button Grid */}
       <View style={styles.gridContainer}>
@@ -38,7 +36,7 @@ const DashboardScreen = ({ navigation }: any) => {
   );
 };
 
-export default DashboardScreen;
+export default CSVExportScreen;
 
 const styles = StyleSheet.create({
   container: {
@@ -46,18 +44,17 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
     padding: 20,
   },
-  header: {
-    alignItems: "center",
-    marginBottom: 20,
-  },
   headerText: {
     fontSize: 22,
     fontWeight: "bold",
+    textAlign: "center",
+    marginBottom: 5,
   },
   subtitle: {
     fontSize: 18,
     color: "#555",
-    marginTop: 5,
+    textAlign: "center",
+    marginBottom: 20,
   },
   gridContainer: {
     flexDirection: "row",
