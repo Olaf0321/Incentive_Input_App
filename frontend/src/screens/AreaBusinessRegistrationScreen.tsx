@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
   },
   header: {
     alignItems: "center",
-    marginBottom: 30,
+    marginBottom: 120,
   },
   headerText: {
     fontSize: 22,
@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
   inputContainer: {
     flexDirection: "row",
     alignItems: "flex-end",
-    marginBottom: 20,
+    marginBottom: 40,
     width: "100%",
   },
   label: {
