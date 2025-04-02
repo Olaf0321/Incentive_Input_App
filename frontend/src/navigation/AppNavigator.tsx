@@ -22,8 +22,8 @@ const Stack = createStackNavigator();
 const AppNavigator = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Login">
-        <Stack.Screen name="Login" component={LoginScreen} />
+      <Stack.Navigator initialRouteName="ログイン">
+        <Stack.Screen name="ログイン" component={LoginScreen} />
         <Stack.Screen name="DashboardScreen" component={DashboardScreen} />
         <Stack.Screen name="AreaBusinessRegistrationScreen" component={AreaBusinessRegistrationScreen} />
         <Stack.Screen name="StaffRegistrationScreen" component={StaffRegistrationScreen} />

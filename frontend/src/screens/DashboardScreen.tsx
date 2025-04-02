@@ -49,7 +49,6 @@ const styles = StyleSheet.create({
   },
   header: {
     alignItems: "center",
-    marginBottom: 120,
   },
   headerText: {
     fontSize: 22,
@@ -59,6 +58,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: "#555",
     marginTop: 5,
+    marginBottom: 120
   },
   gridContainer: {
     flexDirection: "row",

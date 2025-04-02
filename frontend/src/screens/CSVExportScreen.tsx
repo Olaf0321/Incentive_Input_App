@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: "#555",
     textAlign: "center",
-    marginBottom: 20,
+    marginBottom: 120,
   },
   gridContainer: {
     flexDirection: "row",
@@ -70,6 +70,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderRadius: 10,
     paddingHorizontal: 10,
+    marginBottom: 30
   },
   buttonText: {
     color: "#FFFFFF",

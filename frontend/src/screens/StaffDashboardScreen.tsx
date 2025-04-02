@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
   subHeader: {
     fontSize: 18,
     color: "#555",
-    marginBottom: 40,
+    marginBottom: 220,
   },
   buttonRow: {
     flexDirection: "row",

@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: "#555",
     textAlign: "center",
-    marginBottom: 20,
+    marginBottom: 120,
   },
   gridContainer: {
     width: "100%",
@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 8,
-    marginBottom: 15, // Adds spacing between rows
+    marginBottom: 30, // Adds spacing between rows
   },
   buttonText: {
     color: "#FFFFFF",

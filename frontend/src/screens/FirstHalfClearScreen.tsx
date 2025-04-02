@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: "#555",
     textAlign: "center",
-    marginBottom: 20,
+    marginBottom: 120,
   },
   buttonContainer: {
     width: "100%",
@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 8,
-    marginBottom: 15, // Spacing between buttons
+    marginBottom: 30, // Spacing between buttons
   },
   buttonText: {
     color: "#FFFFFF",
