@@ -15,6 +15,7 @@ import SecondHalfClearScreen from "../screens/SecondHalfClearScreen";
 import OverallReviewScreen from "../screens/OverallReviewScreen";
 import ClassroomReviewScreen from "../screens/ClassroomReviewScreen";
 import CSVExportScreen from "../screens/CSVExportScreen";
+import DropdownScreen from "../screens/DropdownScreen";
 
 const Stack = createStackNavigator();
 
@@ -34,6 +35,7 @@ const AppNavigator = () => {
         <Stack.Screen name="OverallReviewScreen" component={OverallReviewScreen} />
         <Stack.Screen name="ClassroomReviewScreen" component={ClassroomReviewScreen} />
         <Stack.Screen name="CSVExportScreen" component={CSVExportScreen} />
+        <Stack.Screen name="DropdownScreen" component={DropdownScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

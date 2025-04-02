@@ -7,6 +7,7 @@ const DashboardScreen = ({ navigation }: any) => {
   const buttons = [
     { title: "エリア及び事業\n登録", screen: "AreaBusinessRegistrationScreen" },
     { title: "スタッフ登録\n社員・バイト", screen: "StaffRegistrationScreen" },
+    // { title: "スタッフ登録\n社員・バイト", screen: "DropdownScreen" },
     { title: "インセンティブ項目設定", screen: "IncentiveSettingsScreen" },
     { title: "内容閲覧・全体・各教室・編集\nCSV出力", screen: "ContentViewScreen" },
     { title: "上期締め切り\n上期データクリア", screen: "FirstHalfClearScreen" },

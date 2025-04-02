@@ -7,14 +7,29 @@ import {
   StyleSheet,
   SafeAreaView,
 } from "react-native";
+import DropDownPicker from "react-native-dropdown-picker";
 
 const StaffRegistrationScreen = ({ navigation }: any) => {
   const [staffName, setStaffName] = useState("");
-  const [areaBusiness, setAreaBusiness] = useState("");
-  const [employmentType, setEmploymentType] = useState("");
+
+  const [openOfClass, setOpenOfClass] = useState(false);
+  const [valueOfClass, setValueOfClass] = useState(null);
+  const [classId, setClassId] = useState([
+    { label: "A教室", value: "option1" },
+    { label: "B教室", value: "option2" },
+    { label: "C教室", value: "option3" },
+  ]);
+
+  const [openOfJob, setOpenOfJob] = useState(false);
+  const [valueOfJob, setValueOfJob] = useState(null);
+  const [jobs, setJobs] = useState([
+    { label: "正社員", value: "option1" },
+    { label: "パートアルバイト", value: "option2" },
+    { label: "その他", value: "option3" },
+  ]);
 
   const handleRegister = () => {
-    console.log("Registered:", { staffName, areaBusiness, employmentType });
+    console.log("Registered:", { staffName, valueOfClass, valueOfJob });
   };
 
   return (
@@ -35,22 +50,38 @@ const StaffRegistrationScreen = ({ navigation }: any) => {
         />
       </View>
 
-      <View style={styles.inputContainer}>
-        <Text style={styles.label}>エリア及び事業選択</Text>
-        <TextInput
-          style={styles.input}
-          value={areaBusiness}
-          onChangeText={setAreaBusiness}
-        />
+      {/* Area and Business Selection */}
+      <View style={styles.inputContainerRow}>
+        <Text style={styles.label}>エリア・事業</Text>
+        <View style={[styles.dropdownWrapper, openOfClass && { zIndex: 2000 }]}>
+          <DropDownPicker
+            open={openOfClass}
+            value={valueOfClass}
+            items={classId}
+            setOpen={setOpenOfClass}
+            setValue={setValueOfClass}
+            setItems={setClassId}
+            placeholder="教室を選択"
+            style={styles.dropdown}
+          />
+        </View>
       </View>
 
-      <View style={styles.inputContainer}>
-        <Text style={styles.label}>正社員・アルバイト選択</Text>
-        <TextInput
-          style={styles.input}
-          value={employmentType}
-          onChangeText={setEmploymentType}
-        />
+      {/* Employment Type Selection */}
+      <View style={styles.inputContainerRow}>
+        <Text style={styles.label}>雇用形態</Text>
+        <View style={[styles.dropdownWrapper, openOfJob && { zIndex: 1000 }]}>
+          <DropDownPicker
+            open={openOfJob}
+            value={valueOfJob}
+            items={jobs}
+            setOpen={setOpenOfJob}
+            setValue={setValueOfJob}
+            setItems={setJobs}
+            placeholder="ジョブを選択"
+            style={styles.dropdown}
+          />
+        </View>
       </View>
 
       {/* Register Button */}
@@ -72,7 +103,7 @@ const styles = StyleSheet.create({
   },
   header: {
     alignItems: "center",
-    marginBottom: 30,
+    marginBottom: 120,
   },
   headerText: {
     fontSize: 22,
@@ -85,13 +116,21 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     flexDirection: "row",
-    alignItems: "flex-end",
-    marginBottom: 20,
+    alignItems: "center",
+    marginBottom: 40,
     width: "100%",
+  },
+  rowContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    width: "100%",
+    marginBottom: 20,
+    zIndex: 1000, // Ensure dropdown appears above other elements
   },
   label: {
     fontSize: 16,
-    width: 160, // Adjusted for alignment with the image
+    width: 120,
   },
   input: {
     flex: 1,
@@ -110,5 +149,22 @@ const styles = StyleSheet.create({
   buttonText: {
     color: "#FFFFFF",
     fontSize: 18,
+  },
+  dropdownContainer: {
+    flex: 1,
+  },
+  inputContainerRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 40,
+    width: "100%",
+  },
+  dropdownWrapper: {
+    flex: 1,
+    zIndex: 1, // 初期値を低めにする
+  },
+  dropdown: {
+    backgroundColor: "#fff",
+    borderColor: "#ccc",
   },
 });
