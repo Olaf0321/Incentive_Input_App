@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: "#555",
     textAlign: "center",
-    marginBottom: 120,
+    marginBottom: 100,
   },
   gridContainer: {
     flexDirection: "row",
@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
   },
   button: {
     width: width * 0.4, // 40% of screen width
-    height: 80,
+    height: 120,
     backgroundColor: "#2B5DAE",
     justifyContent: "center",
     alignItems: "center",

@@ -5,14 +5,14 @@ const { width } = Dimensions.get("window");
 
 const DashboardScreen = ({ navigation }: any) => {
   const buttons = [
-    { title: "エリア及び事業\n登録", screen: "AreaBusinessRegistrationScreen" },
-    { title: "スタッフ登録\n社員・バイト", screen: "StaffRegistrationScreen" },
+    { title: "エリア及び事業\n登録", screen: "エリアビジネス登録" },
+    { title: "スタッフ登録\n社員・バイト", screen: "スタッフ登録" },
     // { title: "スタッフ登録\n社員・バイト", screen: "DropdownScreen" },
-    { title: "インセンティブ項目設定", screen: "IncentiveSettingsScreen" },
-    { title: "内容閲覧・全体・各教室・編集\nCSV出力", screen: "ContentViewScreen" },
-    { title: "上期締め切り\n上期データクリア", screen: "FirstHalfClearScreen" },
+    { title: "インセンティブ項目設定", screen: "インセンティブ設定" },
+    { title: "内容閲覧・全体・各教室・編集\nCSV出力", screen: "コンテンツビュー" },
+    { title: "上期締め切り\n上期データクリア", screen: "前半クリア" },
     // { title: "下期締め切り\n下期データクリア", screen: "StaffDashboardScreen" },
-    { title: "下期締め切り\n下期データクリア", screen: "SecondHalfClearScreen" },
+    { title: "下期締め切り\n下期データクリア", screen: "後半クリア" },
   ];
 
   return (
@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: "#555",
     marginTop: 5,
-    marginBottom: 120
+    marginBottom: 100
   },
   gridContainer: {
     flexDirection: "row",
@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
   },
   button: {
     width: width * 0.4, // 40% of screen width
-    height: 80,
+    height: 120,
     backgroundColor: "#2B5DAE",
     justifyContent: "center",
     alignItems: "center",

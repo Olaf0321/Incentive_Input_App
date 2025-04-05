@@ -14,19 +14,19 @@ const ContentReviewScreen = ({ navigation }: any) => {
 
       {/* Button Grid */}
       <View style={styles.gridContainer}>
-        <TouchableOpacity style={styles.button} onPress={() => handlePress("OverallReviewScreen")}>
+        <TouchableOpacity style={styles.button} onPress={() => handlePress("全体的なレビュー")}>
           <Text style={styles.buttonText}>内容閲覧全体</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.button} onPress={() => handlePress("ClassroomReviewScreen")}>
+        <TouchableOpacity style={styles.button} onPress={() => handlePress("教室レビュー")}>
           <Text style={styles.buttonText}>各教室ごと閲覧</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.button} onPress={() => handlePress("BulkEditScreen")}>
+        <TouchableOpacity style={styles.button} onPress={() => handlePress("一括編集")}>
           <Text style={styles.buttonText}>一括編集</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.button} onPress={() => handlePress("CSVExportScreen")}>
+        <TouchableOpacity style={styles.button} onPress={() => handlePress("CSVエクスポート")}>
           <Text style={styles.buttonText}>CSV出力</Text>
         </TouchableOpacity>
       </View>
@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
   },
   button: {
     width: "48%", // Ensures two buttons per row
-    height: 50,
+    height: 120,
     backgroundColor: "#2B5DAE",
     justifyContent: "center",
     alignItems: "center",

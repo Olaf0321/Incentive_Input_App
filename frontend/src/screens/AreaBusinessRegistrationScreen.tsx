@@ -17,10 +17,10 @@ const AreaBusinessRegistrationScreen = ({ navigation }: any) => {
   const handleRegister = () => {
     // Handle registration logic
     console.log("Registered:", { className, loginId, password });
-    if (className == "") Alert.alert("Please enter classname");
-    else if (loginId == "") Alert.alert("Please enter loginId");
-    else if (password == "") Alert.alert("Please enter password");
-    else Alert.alert("Correctly registered!");
+    if (className == "") Alert.alert("クラス名を入力してください");
+    else if (loginId == "") Alert.alert("ログインIDを入力してください");
+    else if (password == "") Alert.alert("パスワードを入力してください");
+    else Alert.alert("正しく登録されました!");
   };
 
   return (

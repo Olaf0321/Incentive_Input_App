@@ -24,18 +24,18 @@ const AppNavigator = () => {
     <NavigationContainer>
       <Stack.Navigator initialRouteName="ログイン">
         <Stack.Screen name="ログイン" component={LoginScreen} />
-        <Stack.Screen name="DashboardScreen" component={DashboardScreen} />
-        <Stack.Screen name="AreaBusinessRegistrationScreen" component={AreaBusinessRegistrationScreen} />
-        <Stack.Screen name="StaffRegistrationScreen" component={StaffRegistrationScreen} />
-        <Stack.Screen name="IncentiveSettingsScreen" component={IncentiveSettingsScreen} />
-        <Stack.Screen name="ContentViewScreen" component={ContentViewScreen} />
-        <Stack.Screen name="FirstHalfClearScreen" component={FirstHalfClearScreen} />
-        <Stack.Screen name="StaffDashboardScreen" component={StaffDashboardScreen} />
-        <Stack.Screen name="SecondHalfClearScreen" component={SecondHalfClearScreen} />
-        <Stack.Screen name="OverallReviewScreen" component={OverallReviewScreen} />
-        <Stack.Screen name="ClassroomReviewScreen" component={ClassroomReviewScreen} />
-        <Stack.Screen name="CSVExportScreen" component={CSVExportScreen} />
-        <Stack.Screen name="DropdownScreen" component={DropdownScreen} />
+        <Stack.Screen name="ダッシュボード" component={DashboardScreen} />
+        <Stack.Screen name="エリアビジネス登録" component={AreaBusinessRegistrationScreen} />
+        <Stack.Screen name="スタッフ登録" component={StaffRegistrationScreen} />
+        <Stack.Screen name="インセンティブ設定" component={IncentiveSettingsScreen} />
+        <Stack.Screen name="コンテンツビュー" component={ContentViewScreen} />
+        <Stack.Screen name="前半クリア" component={FirstHalfClearScreen} />
+        <Stack.Screen name="スタッフダッシュボード" component={StaffDashboardScreen} />
+        <Stack.Screen name="後半クリア" component={SecondHalfClearScreen} />
+        <Stack.Screen name="全体的なレビュー" component={OverallReviewScreen} />
+        <Stack.Screen name="教室レビュー" component={ClassroomReviewScreen} />
+        <Stack.Screen name="CSVエクスポート" component={CSVExportScreen} />
+        <Stack.Screen name="落ちる" component={DropdownScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

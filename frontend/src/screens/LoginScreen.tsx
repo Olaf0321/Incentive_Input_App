@@ -12,10 +12,10 @@ const LoginScreen = ({ navigation }: any) => {
 
   const handleLogin = () => {
     if (loginId === "admin" && password === "password") {
-      navigation.navigate("DashboardScreen");
+      navigation.navigate("ダッシュボード");
     } else {
       // Alert.alert("ログイン失敗", "正しいログインIDとパスワードを入力してください。");
-      navigation.navigate("StaffDashboardScreen");
+      navigation.navigate("スタッフダッシュボード");
     }
   };
 
