@@ -3,8 +3,9 @@ const Classroom = require('../models/Classroom');
 
 exports.createClassroom = async (req, res) => {
   try {
-    const { name, areaBusiness } = req.body;
-    const newClassroom = new Classroom({ name, areaBusiness });
+    console.log('req.body', req.body);
+    const { name, loginId, password } = req.body;
+    const newClassroom = new Classroom({ name, loginId, password });
     await newClassroom.save();
     res.status(201).json(newClassroom);
   } catch (err) {
@@ -14,7 +15,17 @@ exports.createClassroom = async (req, res) => {
 
 exports.getAllClassrooms = async (req, res) => {
   try {
-    const classrooms = await Classroom.find().populate('areaBusiness', 'name');
+    const classrooms = await Classroom.find();
+    res.json(classrooms);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+exports.getOneClassroom = async (req, res) => {
+  try {
+    const {id} = req.params;
+    const classrooms = await Classroom.findById(id);
     res.json(classrooms);
   } catch (err) {
     res.status(500).json({ error: err.message });
