@@ -5,13 +5,18 @@ const staffSchema = new mongoose.Schema({
   name: { type: String, required: true },
   type: {
     type: String,
-    enum: ['正社員', 'アルバイト'],
+    enum: ['正社員', 'パートアルバイト'],
     required: true
   },
   classroom: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Classroom',
     required: true
+  },
+  role: {
+    type: String,
+    enum: ['user', 'admin'],
+    default: 'user',
   }
 });
 

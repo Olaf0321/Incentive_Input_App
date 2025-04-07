@@ -13,6 +13,13 @@ import DropDownPicker from "react-native-dropdown-picker";
 const IncentiveSettingsScreen = ({ navigation }: any) => {
   const [salaryItem, setSalaryItem] = useState("");
 
+  const [openOfType, setOpenOfType] = useState(false);
+  const [valueOfType, setValueOfType] = useState(null);
+  const [types, setTypes] = useState([
+    { label: "正社員用", value: 100 },
+    { label: "パートアルバイト用", value: 200 },
+  ]);
+
   const [openOfPrice, setOpenOfPrice] = useState(false);
   const [valueOfPrice, setValueOfPrice] = useState(null);
   const [prices, setPrices] = useState([
@@ -61,6 +68,23 @@ const IncentiveSettingsScreen = ({ navigation }: any) => {
           value={salaryItem}
           onChangeText={setSalaryItem}
         />
+      </View>
+
+      {/* Area and Business Selection */}
+      <View style={styles.inputContainerRow}>
+        <Text style={styles.label}>形態</Text>
+        <View style={[styles.dropdownWrapper, openOfType && { zIndex: 2000 }]}>
+          <DropDownPicker
+            open={openOfType}
+            value={valueOfType}
+            items={types}
+            setOpen={setOpenOfType}
+            setValue={setValueOfType}
+            setItems={setTypes}
+            placeholder="単価をお選びください。"
+            style={styles.dropdown}
+          />
+        </View>
       </View>
 
       {/* Area and Business Selection */}
@@ -115,7 +139,7 @@ const styles = StyleSheet.create({
   },
   header: {
     alignItems: "center",
-    marginBottom: 120,
+    marginBottom: 100,
   },
   headerText: {
     fontSize: 22,
