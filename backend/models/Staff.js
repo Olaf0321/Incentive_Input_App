@@ -14,11 +14,6 @@ const staffSchema = new mongoose.Schema(
       ref: 'Classroom',
       required: true
     },
-    role: {
-      type: String,
-      enum: ['user', 'admin'],
-      default: 'user',
-    },
     incentiveList: [
       {
         time: {
