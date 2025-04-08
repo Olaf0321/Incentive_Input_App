@@ -3,7 +3,11 @@ const mongoose = require('mongoose');
 
 const staffSchema = new mongoose.Schema(
   {
-    name: { type: String, required: true },
+    name: {
+      type: String,
+      unique: true,
+      required: true
+    },
     type: {
       type: String,
       enum: ['正社員', 'パートアルバイト'],

@@ -11,11 +11,41 @@ const LoginScreen = ({ navigation }: any) => {
   const [password, setPassword] = useState("");
 
   const handleLogin = () => {
+
     if (loginId === "admin" && password === "password") {
       navigation.navigate("ダッシュボード");
     } else {
       // Alert.alert("ログイン失敗", "正しいログインIDとパスワードを入力してください。");
       navigation.navigate("スタッフダッシュボード");
+    }
+    
+    const response = await fetch('http://62.3.6.169:8000/api/login', {
+        method: 'POST',
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: email,
+          pwd: password,
+        }),
+      });
+  
+      const data = await response.json();
+      console.log("data", data);
+  
+      if (response.ok) {
+        setUserData(data.user);
+
+        // Successful login
+        Alert.alert(`${t('loginscreen.loginsuccess')}`, `${t('welcome')}`);
+        navigation.navigate('Home');
+      } else {
+        // Handle login failure
+        Alert.alert(`${t('loginscreen.loginfailed')}`, data.message ? t(`loginscreen.${data.message}`) : t('loginscreen.invalidcredential'));
+      }
+    } catch (error) {
+      Alert.alert(t('error'), t('loginscreen.errmsg'));
+      console.error(t('neterror'), error);
     }
   };
 
