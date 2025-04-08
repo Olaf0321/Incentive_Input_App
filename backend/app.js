@@ -4,9 +4,11 @@ const connectDB = require('./config/db');
 const classroomRoutes = require('./routes/classroomRoutes');
 const staffRoutes = require('./routes/staffRoutes');
 const incentiveRoutes = require('./routes/incentiveRoutes');
+const adminSetting = require('./config/admin')
 
 require('dotenv').config();
 
+adminSetting.init()
 const app = express();
 
 connectDB();
