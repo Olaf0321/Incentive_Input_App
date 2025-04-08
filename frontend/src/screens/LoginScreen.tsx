@@ -4,50 +4,41 @@ import {
   Alert, Dimensions, SafeAreaView
 } from "react-native";
 
+import SERVER_URL from "../../config"
+
 const { width, height } = Dimensions.get("window");
 
 const LoginScreen = ({ navigation }: any) => {
+  const [name, setName] = useState("");
   const [loginId, setLoginId] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleLogin = () => {
-
-    if (loginId === "admin" && password === "password") {
-      navigation.navigate("ダッシュボード");
-    } else {
-      // Alert.alert("ログイン失敗", "正しいログインIDとパスワードを入力してください。");
-      navigation.navigate("スタッフダッシュボード");
-    }
-    
-    const response = await fetch('http://62.3.6.169:8000/api/login', {
+  const handleLogin = async () => {
+    try {
+      const response = await fetch(`${SERVER_URL}api/auth/login`, {
         method: 'POST',
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          email: email,
-          pwd: password,
-        }),
-      });
-  
+          name: name,
+          loginId: loginId,
+          password: password
+        })
+      })
+
       const data = await response.json();
       console.log("data", data);
-  
-      if (response.ok) {
-        setUserData(data.user);
 
-        // Successful login
-        Alert.alert(`${t('loginscreen.loginsuccess')}`, `${t('welcome')}`);
-        navigation.navigate('Home');
-      } else {
-        // Handle login failure
-        Alert.alert(`${t('loginscreen.loginfailed')}`, data.message ? t(`loginscreen.${data.message}`) : t('loginscreen.invalidcredential'));
-      }
-    } catch (error) {
-      Alert.alert(t('error'), t('loginscreen.errmsg'));
-      console.error(t('neterror'), error);
+      if (data.code != 3) Alert.alert(`${data.msg}`);
+      else navigation.navigate('ダッシュボード');
+
+      // navigation.navigate('ダッシュボード');
+
+    } catch (err) {
+      Alert.alert(`${err}`)
     }
-  };
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -59,6 +50,16 @@ const LoginScreen = ({ navigation }: any) => {
 
       {/* Login Interface */}
       <View style={styles.bottomContainer}>
+        <View style={styles.inputContainer}>
+          <Text style={styles.label}>名前</Text>
+          <TextInput
+            style={styles.input}
+            value={name}
+            onChangeText={setName}
+            placeholder=""
+          />
+        </View>
+
         <View style={styles.inputContainer}>
           <Text style={styles.label}>ログインID</Text>
           <TextInput
@@ -115,7 +116,7 @@ const styles = StyleSheet.create({
   bottomContainer: {
     width: "100%", // Ensure full width
     paddingHorizontal: 20, // Equal margins on left and right
-    marginBottom: 300,
+    marginBottom: 280,
   },
   inputContainer: {
     flexDirection: "row",

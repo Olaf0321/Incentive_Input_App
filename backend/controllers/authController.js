@@ -1,12 +1,15 @@
 // controllers/classroomController.js
 const Classroom = require('../models/Classroom');
 const Staff = require('../models/Staff');
+const bcrypt = require('bcrypt');
 
 exports.login = async (req, res) => {
   try {
     const {name, loginId, password} = req.body;
 
-    const staff = Staff.findOne({name: name});
+    console.log('body', req.body);
+
+    const staff = await Staff.findOne({name: name});
 
     if (staff == null) {
         res.status(201).json({
@@ -16,17 +19,16 @@ exports.login = async (req, res) => {
         return
     }
 
-    const classroom = Classroom.findById(staff.classroom)
+    const response = await Classroom.findById(staff.classroom);
 
-    if (classroom.loginId != loginId) {
+    if (response.loginId != loginId) {
         res.status(201).json({
             code: 1,
             msg: "ログインIDを正確に入力してください。"
         })
         return
     }
-
-    const isMatch = await bcrypt.compare(password, classroom.password);
+    const isMatch = await bcrypt.compare(password, response.password);
 
     if (!isMatch) {
         res.status(201).json({
