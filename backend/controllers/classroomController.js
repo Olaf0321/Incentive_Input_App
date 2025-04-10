@@ -1,13 +1,32 @@
 // controllers/classroomController.js
 const Classroom = require('../models/Classroom');
+const bcrypt = require('bcrypt')
 
 exports.createClassroom = async (req, res) => {
   try {
-    console.log('req.body', req.body);
+    console.log('req.body', req.body)
     const { name, loginId, password } = req.body;
-    const newClassroom = new Classroom({ name, loginId, password });
-    await newClassroom.save();
-    res.status(201).json(newClassroom);
+    const response = await Classroom.findOne({name: name});
+
+    console.log('response', response);
+
+    if (response != null) {
+      res.status(200).json({
+        code: 0,
+        msg: "すでに登録されている名前です。"
+      })
+    } else {
+      const salt = await bcrypt.genSalt(Number(process.env.SALT));
+      await Classroom.create({
+        name: name,
+        loginId: loginId,
+        password: await bcrypt.hash(password, salt)
+      })
+      res.status(200).json({
+        code: 1,
+        msg: "正しく登録されました!"
+      });
+    }
   } catch (err) {
     res.status(400).json({ error: err.message });
   }

@@ -19,6 +19,8 @@ exports.login = async (req, res) => {
         return
     }
 
+    const salt = await bcrypt.genSalt(10);
+
     const response = await Classroom.findById(staff.classroom);
 
     if (response.loginId != loginId) {
