@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -9,6 +9,8 @@ import {
   Alert
 } from "react-native";
 import DropDownPicker from "react-native-dropdown-picker";
+import SERVER_URL from "../../config";
+// DropDownPicker.setListMode("MODAL")
 
 const IncentiveSettingsScreen = ({ navigation }: any) => {
   const [salaryItem, setSalaryItem] = useState("");
@@ -16,8 +18,8 @@ const IncentiveSettingsScreen = ({ navigation }: any) => {
   const [openOfType, setOpenOfType] = useState(false);
   const [valueOfType, setValueOfType] = useState(null);
   const [types, setTypes] = useState([
-    { label: "正社員用", value: 100 },
-    { label: "パートアルバイト用", value: 200 },
+    { label: "正社員用", value: "正社員用" },
+    { label: "パートアルバイト用", value: "パートアルバイト用" },
   ]);
 
   const [openOfPrice, setOpenOfPrice] = useState(false);
@@ -36,21 +38,54 @@ const IncentiveSettingsScreen = ({ navigation }: any) => {
     { label: "300", value: 300 },
   ]);
 
-  const handleRegister = () => {
-    if (!salaryItem) {
-      Alert.alert("給与項目名を入力してください。");
-      return;
+  const handleRegister = async () => {
+    try {
+      if (!salaryItem) Alert.alert("給与項目名を入力してください。");
+      else if (!valueOfType) Alert.alert("形態を入力してください。");
+      else if (!valueOfPrice) Alert.alert("単価を選択してください。");
+      else if (!valueOfRating) Alert.alert("等級を選択してください。");
+      else {
+        const response = await fetch(`${SERVER_URL}api/incentive/`, {
+          method: 'POST',
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify ({
+            name: salaryItem,
+            type: valueOfType,
+            unit_price: valueOfPrice,
+            upper_limit: valueOfRating
+          })
+        });
+        const data = await response.json();
+        Alert.alert(`${data.msg}`);
+        if (data.code == 1) {
+          setSalaryItem("");
+          setValueOfPrice(null);
+          setValueOfRating(null);
+        }
+      }
+    } catch (err) {
+      Alert.alert(`error: ${err}`);
     }
-    if (!valueOfPrice) {
-      Alert.alert("単価を選択してください。");
-      return;
-    }
-    if (!valueOfRating) {
-      Alert.alert("等級を選択してください。");
-      return;
-    }
-    console.log("Registering with:", { salaryItem, valueOfPrice, valueOfRating });
   };
+
+  useEffect(()=> {
+    let arr = [];
+    for (let i = 100; i <= 10000; i += 100) {
+      arr.push({label: String(i), value: i});
+    }
+    setPrices([...arr]);
+
+    arr = [];
+    for (let i = 1; i <= 20; i++) {
+      arr.push({label: String(i), value: i});
+    }
+    for (let i = 30; i <= 200; i+=10) {
+      arr.push({label: String(i), value: i});
+    }
+    setRatings([...arr]);
+  }, [])
 
   return (
     <SafeAreaView style={styles.container}>
@@ -100,6 +135,10 @@ const IncentiveSettingsScreen = ({ navigation }: any) => {
             setItems={setPrices}
             placeholder="単価をお選びください。"
             style={styles.dropdown}
+            maxHeight={200} // This limits the dropdown height to 300, making it scrollable
+            searchable = {true}
+            searchPlaceholder="Search"
+            autoScroll={true}
           />
         </View>
       </View>
@@ -116,6 +155,10 @@ const IncentiveSettingsScreen = ({ navigation }: any) => {
             setItems={setRatings}
             placeholder="等級をお選びください。"
             style={styles.dropdown}
+            maxHeight={200} // This limits the dropdown height to 300, making it scrollable
+            searchable = {true}
+            searchPlaceholder="Search"
+            autoScroll={true}
           />
         </View>
       </View>
@@ -191,5 +234,5 @@ const styles = StyleSheet.create({
   dropdown: {
     backgroundColor: "#fff",
     borderColor: "#ccc",
-  },
+  }
 });

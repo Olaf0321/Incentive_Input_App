@@ -4,8 +4,29 @@ const Incentive = require('../models/Incentive');
 exports.createIncentive = async (req, res) => {
   try {
     const newIncentive = new Incentive(req.body);
-    const saved = await newIncentive.save();
-    res.status(201).json(saved);
+    console.log('newIncentive', newIncentive);
+    const {name, type, unit_price, upper_limit} = newIncentive;
+    const response = await Incentive.findOne({name: name, type: type});
+
+    console.log('response', response);
+
+    if (response != null) {
+      res.status(200).json({
+        code: 0,
+        msg: "すでに登録されている給与項目です。"
+      })
+    } else {
+      await Incentive.create({
+        name: name,
+        type: type,
+        unit_price: unit_price,
+        upper_limit: upper_limit
+      });
+      res.status(200).json({
+        code: 1,
+        msg: "正確に登録されました。"
+      })
+    }
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
