@@ -42,7 +42,7 @@ const AreaBusinessRegistrationScreen = ({ navigation }: any) => {
       }
 
     } catch (err) {
-      console.log("err", err);
+      Alert.alert(`error: ${err}`);
     }
 
     // Handle registration logic

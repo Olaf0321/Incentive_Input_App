@@ -35,7 +35,8 @@ exports.createClassroom = async (req, res) => {
 exports.getAllClassrooms = async (req, res) => {
   try {
     const classrooms = await Classroom.find();
-    res.json(classrooms);
+    console.log('result', classrooms);
+    res.status(201).json(classrooms);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

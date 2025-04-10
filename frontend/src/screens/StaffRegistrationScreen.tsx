@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -6,14 +6,17 @@ import {
   TouchableOpacity,
   StyleSheet,
   SafeAreaView,
+  Alert
 } from "react-native";
 import DropDownPicker from "react-native-dropdown-picker";
+
+import SERVER_URL from "../../config"
 
 const StaffRegistrationScreen = ({ navigation }: any) => {
   const [staffName, setStaffName] = useState("");
 
   const [openOfClass, setOpenOfClass] = useState(false);
-  const [valueOfClass, setValueOfClass] = useState(null);
+  const [valueOfClass, setValueOfClass] = useState("");
   const [classId, setClassId] = useState([
     { label: "A教室", value: "option1" },
     { label: "B教室", value: "option2" },
@@ -21,16 +24,65 @@ const StaffRegistrationScreen = ({ navigation }: any) => {
   ]);
 
   const [openOfJob, setOpenOfJob] = useState(false);
-  const [valueOfJob, setValueOfJob] = useState(null);
+  const [valueOfJob, setValueOfJob] = useState("");
   const [jobs, setJobs] = useState([
-    { label: "正社員", value: "option1" },
-    { label: "パートアルバイト", value: "option2" },
-    { label: "その他", value: "option3" },
+    { label: "正社員", value: "正社員" },
+    { label: "パートアルバイト", value: "パートアルバイト" }
   ]);
 
-  const handleRegister = () => {
-    console.log("Registered:", { staffName, valueOfClass, valueOfJob });
+  const handleRegister = async () => {
+    try {
+      if (staffName == '') Alert.alert(`スタッフの名前を入力してください。`);
+      else if (valueOfClass == "") Alert.alert(`エリア/業種を選択してください。`);
+      else if (valueOfJob == "") Alert.alert(`雇用形態を選択してください。`);
+      else {
+        const response = await fetch(`${SERVER_URL}api/staff/`, {
+          method: 'POST',
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            name: staffName,
+            type: valueOfJob,
+            classroom: valueOfClass
+          })
+        })
+        const data = await response.json();
+        Alert.alert(`${data.msg}`);
+        if (data.code == 1) {
+          setStaffName("");
+          setValueOfClass("");
+          setValueOfJob("");
+        }
+      }
+    } catch (err) {
+      Alert.alert(`error: ${err}`);
+    }
   };
+
+  const getClassrooms = async () => {
+    try {
+      const response = await fetch(`${SERVER_URL}api/classrooms/`, {
+        method: 'GET',
+        headers: {
+          "Content-Type": "application/json",
+        }
+      });
+      let result = [];
+      const data = await response.json();
+      for (let i = 0; i < data.length; i++) {
+        if (data[i].name == 'AdminClassroom') continue;
+        result.push({label: data[i].name, value: data[i]._id});
+      }
+      setClassId([...result]);
+    } catch (err) {
+      Alert.alert(`${err}`);
+    }
+  }
+
+  useEffect(() => {
+    getClassrooms();
+  }, [])
 
   return (
     <SafeAreaView style={styles.container}>

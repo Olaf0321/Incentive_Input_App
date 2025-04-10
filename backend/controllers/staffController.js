@@ -5,8 +5,28 @@ const Staff = require('../models/Staff');
 exports.createStaff = async (req, res) => {
   try {
     const staff = new Staff(req.body);
-    const savedStaff = await staff.save();
-    res.status(201).json(savedStaff);
+    console.log("staff", staff);
+    const {name, type, classroom} = staff;
+    const response = await Staff.findOne({name: name});
+
+    console.log('response', response);
+
+    if (response != null) {
+      res.status(200).json({
+        code : 0,
+        msg: "すでに登録されている名前です。"
+      })
+    } else {
+      await Staff.create({
+        name: name,
+        type: type,
+        classroom: classroom
+      });
+      res.status(200).json({
+        code: 1,
+        msg: "正確に登録されました。"
+      })
+    }
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
