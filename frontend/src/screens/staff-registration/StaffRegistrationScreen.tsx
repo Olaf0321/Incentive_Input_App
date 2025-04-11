@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import DropDownPicker from "react-native-dropdown-picker";
 
-import SERVER_URL from "../../config"
+import SERVER_URL from "../../../config"
 
 const StaffRegistrationScreen = ({ navigation }: any) => {
   const [staffName, setStaffName] = useState("");

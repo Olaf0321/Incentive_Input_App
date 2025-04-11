@@ -3,20 +3,20 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
 
 // Import Screens
-import LoginScreen from "../screens/LoginScreen";
-import DashboardScreen from "../screens/DashboardScreen";
-import AreaBusinessRegistrationScreen from "../screens/AreaBusinessRegistrationScreen";
-import StaffRegistrationScreen from "../screens/StaffRegistrationScreen";
-import IncentiveSettingsScreen from "../screens/IncentiveSettingsScreen";
-import ContentViewScreen from "../screens/ContentViewScreen";
-import FirstHalfClearScreen from "../screens/FirstHalfClearScreen";
-import StaffDashboardScreen from "../screens/StaffDashboardScreen";
-import SecondHalfClearScreen from "../screens/SecondHalfClearScreen";
-import OverallReviewScreen from "../screens/OverallReviewScreen";
-import ClassroomReviewScreen from "../screens/ClassroomReviewScreen";
-import CSVExportScreen from "../screens/CSVExportScreen";
+import LoginScreen from "../screens/login/LoginScreen";
+import DashboardScreen from "../screens/dashboard/DashboardScreen";
+import AreaBusinessRegistrationScreen from "../screens/area-registration/AreaBusinessRegistrationScreen";
+import StaffRegistrationScreen from "../screens/staff-registration/StaffRegistrationScreen";
+import IncentiveSettingsScreen from "../screens/incentive-setting/IncentiveSettingsScreen";
+import ContentViewScreen from "../screens/overall-review/ContentViewScreen";
+import FirstHalfClearScreen from "../screens/first-half-clear/FirstHalfClearScreen";
+import StaffDashboardScreen from "../screens/dashboard/StaffDashboardScreen";
+import SecondHalfClearScreen from "../screens/second-half-clear/SecondHalfClearScreen";
+import OverallReviewScreen from "../screens/overall-review/OverallReviewScreen";
+import ClassroomReviewScreen from "../screens/content-view/ClassroomReviewScreen";
+import CSVExportScreen from "../screens/content-view/CSVExportScreen";
 import DropdownScreen from "../screens/DropdownScreen";
-import EmployeeDetailScreen from '../screens/EmployeeDetailScreen'; // You'll make this
+import EmployeeDetailScreen from '../screens/content-view/EmployeeDetailScreen'; // You'll make this
 
 const Stack = createStackNavigator();
 

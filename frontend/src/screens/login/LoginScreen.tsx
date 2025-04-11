@@ -4,7 +4,7 @@ import {
   Alert, Dimensions, SafeAreaView
 } from "react-native";
 
-import SERVER_URL from "../../config"
+import SERVER_URL from "../../../config"
 
 const { width, height } = Dimensions.get("window");
 

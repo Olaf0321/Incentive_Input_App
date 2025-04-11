@@ -9,7 +9,7 @@ import {
   Alert
 } from "react-native";
 import DropDownPicker from "react-native-dropdown-picker";
-import SERVER_URL from "../../config";
+import SERVER_URL from "../../../config";
 // DropDownPicker.setListMode("MODAL")
 
 const IncentiveSettingsScreen = ({ navigation }: any) => {

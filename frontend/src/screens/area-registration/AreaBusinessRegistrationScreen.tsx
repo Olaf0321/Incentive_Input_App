@@ -8,7 +8,7 @@ import {
   SafeAreaView,
   Alert
 } from "react-native";
-import SERVER_URL from "../../config";
+import SERVER_URL from "../../../config";
 
 const AreaBusinessRegistrationScreen = ({ navigation }: any) => {
   const [className, setClassName] = useState("");
