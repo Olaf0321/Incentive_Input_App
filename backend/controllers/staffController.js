@@ -38,7 +38,10 @@ exports.getAllStaff = async (req, res) => {
     const staffList = await Staff.find()
       .populate('classroom')
       .populate('incentiveList.incentive');
-    res.json(staffList);
+    
+    const realStaffList = staffList.filter(item=>item.name !== 'Admin');
+    
+    res.status(200).json(realStaffList);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

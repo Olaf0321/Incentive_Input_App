@@ -1,62 +1,86 @@
-import React from "react";
-import { View, Text, ScrollView, StyleSheet } from "react-native";
+import React, {useEffect, useState} from "react";
+import { View, Text, ScrollView, StyleSheet, Alert } from "react-native";
+import SERVER_URL from "../../config";
 
 const EmployeeListScreen = () => {
     // Sample Data (Assuming received from backend)
-    const regularEmployees = [
+    const [regularEmployees, setRegularEmployees] = useState([
         { name: "宮本 和弘", role: "正社員", area: "A教室" },
-        { name: "菅原 明菜", role: "正社員", area: "A教室" },
-        { name: "苅谷 佳子", role: "正社員", area: "B教室" },
-        { name: "河野 貴子", role: "正社員", area: "B教室" },
-        { name: "沼田 玲子", role: "正社員", area: "C教室" },
-        { name: "工藤 勝乃", role: "正社員", area: "C教室" },
-        { name: "秋山 雅香", role: "正社員", area: "就労支援事業" },
-        { name: "鈴木 ひろみ", role: "正社員", area: "就労支援事業" },
-        { name: "大野 理佳佳", role: "正社員", area: "生活介護事業" },
-        { name: "宮本 真代美", role: "正社員", area: "生活介護事業" },
-        { name: "川辺 淑子", role: "正社員", area: "マッサージ事業" },
-    ];
+    ]);
 
-    const partTimeEmployees = [
+    const [partTimeEmployees, setPartTimeEmployees] = useState([
         { name: "A", role: "パート・アルバイト", area: "A教室" },
-        { name: "B", role: "パート・アルバイト", area: "A教室" },
-        { name: "C", role: "パート・アルバイト", area: "B教室" },
-        { name: "D", role: "パート・アルバイト", area: "C教室" },
-        { name: "E", role: "パート・アルバイト", area: "C教室" },
-    ];
+    ]);
 
-    const incentives = [
-        "セクリハ提出",
-        "遠隔地勤務",
-        "大西さん18時半送迎対応",
-        "日曜朝柴谷君送迎対応",
-        "土、日、祝出勤",
-        "プール対応",
-        "東庄帰り(宮崎くん、石毛さん)",
-        "八千代帰り(松田兄弟、嶋日)",
-        "把握",
-        "手洗い",
-        "取っての除菌",
-        "おやつの準備",
-        "利用者対応 口調",
-        "利用者対応 呼び捨て",
-        "利用者対応 寄り添った支援",
-        "見学対応",
-        "来客対応 あいさつ、言葉使い",
-        "整理整頓 私物をおかない",
-        "経費削減 エアコン",
-        "経費削減 モノクロコピー",
-        "情報収集",
-        "規律手当 約束期限",
-        "規律手当期日",
-        "規律手当 公私混同",
-        "マナー手当 礼儀正しい",
-        "マナー手当 清潔感",
-        "マナー手当 笑顔・安心感",
-        "責任手当 コツコツ",
-        "信頼",
-        "コミュニケーション"
-    ];
+    const [incentives, setIncentives] = useState([
+        {name: "セクリハ提出", type: "正社員用"},
+    ]);
+
+    const init = async () => {
+        try {
+            let regularArr = [], partTimeArr = [];
+            const allStaff = await fetch(`${SERVER_URL}api/staff/`, {
+                method: 'GET',
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            });
+            const employeesData = await allStaff.json();
+
+            
+
+            for (let i = 0; i < employeesData.length; i++) {
+                if (employeesData[i].type == '正社員') {
+                    regularArr.push({
+                        name: employeesData[i].name,
+                        role: employeesData[i].type,
+                        area: employeesData[i].classroom.name
+                    });
+                } else {
+                    partTimeArr.push({
+                        name: employeesData[i].name,
+                        role: employeesData[i].type,
+                        area: employeesData[i].classroom.name
+                    });
+                }
+            }
+
+            setRegularEmployees([...regularArr]);
+            setPartTimeEmployees([...partTimeArr]);
+            
+            regularArr = [], partTimeArr = [];
+
+            const allIncentives = await fetch(`${SERVER_URL}api/incentive/`, {
+                method: 'GET',
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            });
+            const incentivesData = await allIncentives.json();
+
+            for (let i = 0; i < incentivesData.length; i++) {
+                if (incentivesData[i].type == '正社員') {
+                    regularArr.push({
+                        name: incentivesData[i].name,
+                        type: incentivesData[i].type
+                    });
+                } else {
+                    partTimeArr.push({
+                        name: incentivesData[i].name,
+                        type: incentivesData[i].type,
+                    });
+                }
+            }
+
+            setIncentives([...regularArr, ...partTimeArr]);
+        } catch (err) {
+            Alert.alert(`error: ${err}`);
+        }
+    }
+
+    useEffect(()=> {
+        init();
+    })
 
     return (
         <ScrollView style={styles.container}>
@@ -72,13 +96,18 @@ const EmployeeListScreen = () => {
                     <Text style={styles.tableHeader}>職別</Text>
                     <Text style={styles.tableHeader}>エリア及び事業</Text>
                 </View>
-                {regularEmployees.map((emp, index) => (
+                {regularEmployees.length > 0 && regularEmployees.map((emp, index) => (
                     <View key={index} style={styles.tableRow}>
                         <Text style={styles.tableCell}>{emp.name}</Text>
                         <Text style={styles.tableCell}>{emp.role}</Text>
                         <Text style={styles.tableCell}>{emp.area}</Text>
                     </View>
                 ))}
+                {regularEmployees.length == 0 &&
+                    <View style={styles.tableRow}>
+                        <Text style={styles.tablenone}>登録されたスタッフはありません。</Text>
+                    </View>
+                }
             </View>
 
             {/* Part-Time Employees Table */}
@@ -89,29 +118,42 @@ const EmployeeListScreen = () => {
                     <Text style={styles.tableHeader}>職別</Text>
                     <Text style={styles.tableHeader}>エリア及び事業</Text>
                 </View>
-                {partTimeEmployees.map((emp, index) => (
+                
+                {partTimeEmployees.length > 0 && partTimeEmployees.map((emp, index) => (
                     <View key={index} style={styles.tableRow}>
                         <Text style={styles.tableCell}>{emp.name}</Text>
                         <Text style={styles.tableCell}>{emp.role}</Text>
                         <Text style={styles.tableCell}>{emp.area}</Text>
                     </View>
                 ))}
+                {partTimeEmployees.length == 0 &&
+                    <View style={styles.tableRow}>
+                        <Text style={styles.tablenone}>登録されたスタッフはありません。</Text>
+                    </View>
+                }
             </View>
 
             {/* Incentive Table */}
             <Text style={styles.sectionTitle}>インセンティブ一覧</Text>
-            <View style={styles.incentiveTable}>
+            <View style={styles.table}>
                 {/* Header */}
-                <View style={styles.incentiveHeader}>
-                    <Text style={styles.incentiveHeaderText}>給与項目</Text>
+                <View style={styles.tableRowHeader}>
+                    <Text style={styles.tableHeader}>給与項目</Text>
+                    <Text style={styles.tableHeader}></Text>
                 </View>
 
                 {/* Incentive List */}
-                {incentives.map((item, index) => (
-                    <View key={index} style={styles.incentiveRow}>
-                        <Text style={styles.incentiveCell}>{item}</Text>
+                {incentives.length > 0 && incentives.map((item, index) => (
+                    <View key={index} style={styles.tableRow}>
+                        <Text style={styles.tableCell}>{item.name}</Text>
+                        <Text style={styles.tableCell}>{item.type}</Text>
                     </View>
                 ))}
+                {incentives.length == 0 &&
+                    <View style={styles.tableRow}>
+                        <Text style={styles.tablenone}>登録されたインセンティブはありません。</Text>
+                    </View>
+                }
             </View>
         </ScrollView>
     );
@@ -170,32 +212,9 @@ const styles = StyleSheet.create({
         flex: 1,
         textAlign: "center",
     },
-    incentiveTable: {
-        borderWidth: 1,
-        borderColor: "#000",
-        marginTop: 15,
-        marginBottom: 50
-    },
-    incentiveHeader: {
-        backgroundColor: "#2B5DAE",
-        paddingVertical: 8,
-        borderBottomWidth: 1,
-        borderBottomColor: "#000",
-    },
-    incentiveHeaderText: {
-        color: "#FFFFFF",
-        fontWeight: "bold",
-        textAlign: "center",
-        fontSize: 16,
-    },
-    incentiveRow: {
-        borderBottomWidth: 1,
-        borderBottomColor: "#000",
-        paddingVertical: 5,
-    },
-    incentiveCell: {
-        textAlign: "center",
-        fontSize: 14,
-        paddingVertical: 5,
+    tablenone: {
+        flex: 1,
+        textAlign: "left",
+        marginLeft: 30
     },
 });
