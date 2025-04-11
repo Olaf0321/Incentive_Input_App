@@ -1,29 +1,54 @@
-import React from "react";
-import { View, Text, ScrollView, StyleSheet } from "react-native";
+import React, {useEffect, useState} from "react";
+import { View, Text, ScrollView, StyleSheet, Alert } from "react-native";
+import SERVER_URL from "../../config";
 
 const EmployeeListScreen = () => {
     // Sample Data (Assuming received from backend)
-    const regularEmployees = [
-        { name: "宮本 和弘", role: "正社員", area: "A教室" },
-        { name: "菅原 明菜", role: "正社員", area: "A教室" },
-        { name: "苅谷 佳子", role: "正社員", area: "B教室" },
-        { name: "河野 貴子", role: "正社員", area: "B教室" },
-        { name: "沼田 玲子", role: "正社員", area: "C教室" },
-        { name: "工藤 勝乃", role: "正社員", area: "C教室" },
-        { name: "秋山 雅香", role: "正社員", area: "就労支援事業" },
-        { name: "鈴木 ひろみ", role: "正社員", area: "就労支援事業" },
-        { name: "大野 理佳佳", role: "正社員", area: "生活介護事業" },
-        { name: "宮本 真代美", role: "正社員", area: "生活介護事業" },
-        { name: "川辺 淑子", role: "正社員", area: "マッサージ事業" },
-    ];
+    const [regularEmployees, setRegularEmployees] = useState([
+        { name: "宮本 和弘", role: "正社員", area: "A教室" }
+    ]);
 
-    const partTimeEmployees = [
-        { name: "A", role: "パート・アルバイト", area: "A教室" },
-        { name: "B", role: "パート・アルバイト", area: "A教室" },
-        { name: "C", role: "パート・アルバイト", area: "B教室" },
-        { name: "D", role: "パート・アルバイト", area: "C教室" },
-        { name: "E", role: "パート・アルバイト", area: "C教室" },
-    ];
+    const [partTimeEmployees, setPartTimeEmployees] = useState([
+        { name: "A", role: "パート・アルバイト", area: "A教室" }
+    ]);
+
+    const init = async () => {
+        try {
+            let regularArr = [], partTimeArr = [];
+            const allStaff = await fetch(`${SERVER_URL}api/staff/`, {
+                method: 'GET',
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            });
+            const employeesData = await allStaff.json();
+            
+            for (let i = 0; i < employeesData.length; i++) {
+                if (employeesData[i].type == '正社員') {
+                    regularArr.push({
+                        name: employeesData[i].name,
+                        role: employeesData[i].type,
+                        area: employeesData[i].classroom.name
+                    });
+                } else {
+                    partTimeArr.push({
+                        name: employeesData[i].name,
+                        role: employeesData[i].type,
+                        area: employeesData[i].classroom.name
+                    });
+                }
+            }
+
+            setRegularEmployees([...regularArr]);
+            setPartTimeEmployees([...partTimeArr]);
+        } catch (err) {
+            Alert.alert(`error: ${err}`);
+        }
+    }
+
+    useEffect(()=> {
+        init();
+    })
 
     return (
         <ScrollView style={styles.container}>
@@ -39,13 +64,18 @@ const EmployeeListScreen = () => {
                     <Text style={styles.tableHeader}>職別</Text>
                     <Text style={styles.tableHeader}>エリア及び事業</Text>
                 </View>
-                {regularEmployees.map((emp, index) => (
+                {regularEmployees.length > 0 && regularEmployees.map((emp, index) => (
                     <View key={index} style={styles.tableRow}>
                         <Text style={styles.tableCell}>{emp.name}</Text>
                         <Text style={styles.tableCell}>{emp.role}</Text>
                         <Text style={styles.tableCell}>{emp.area}</Text>
                     </View>
                 ))}
+                {regularEmployees.length == 0 &&
+                    <View style={styles.tableRow}>
+                        <Text style={styles.tablenone}>登録されたスタッフはありません。</Text>
+                    </View>
+                }
             </View>
 
             {/* Part-Time Employees Table */}
@@ -56,13 +86,18 @@ const EmployeeListScreen = () => {
                     <Text style={styles.tableHeader}>職別</Text>
                     <Text style={styles.tableHeader}>エリア及び事業</Text>
                 </View>
-                {partTimeEmployees.map((emp, index) => (
+                {partTimeEmployees.length > 0 && partTimeEmployees.map((emp, index) => (
                     <View key={index} style={styles.tableRow}>
                         <Text style={styles.tableCell}>{emp.name}</Text>
                         <Text style={styles.tableCell}>{emp.role}</Text>
                         <Text style={styles.tableCell}>{emp.area}</Text>
                     </View>
                 ))}
+                {partTimeEmployees.length == 0 &&
+                    <View style={styles.tableRow}>
+                        <Text style={styles.tablenone}>登録されたスタッフはありません。</Text>
+                    </View>
+                }
             </View>
         </ScrollView>
     );
@@ -121,10 +156,9 @@ const styles = StyleSheet.create({
         flex: 1,
         textAlign: "center",
     },
-    incentiveTable: {
-        borderWidth: 1,
-        borderColor: "#000",
-        marginTop: 15,
-        marginBottom: 50
-    },
+    tablenone: {
+        flex: 1,
+        textAlign: "left",
+        marginLeft: 30
+    }
 });
