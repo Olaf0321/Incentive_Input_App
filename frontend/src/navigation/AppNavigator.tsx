@@ -16,6 +16,7 @@ import OverallReviewScreen from "../screens/OverallReviewScreen";
 import ClassroomReviewScreen from "../screens/ClassroomReviewScreen";
 import CSVExportScreen from "../screens/CSVExportScreen";
 import DropdownScreen from "../screens/DropdownScreen";
+import EmployeeDetailScreen from '../screens/EmployeeDetailScreen'; // You'll make this
 
 const Stack = createStackNavigator();
 
@@ -34,6 +35,7 @@ const AppNavigator = () => {
         <Stack.Screen name="後半クリア" component={SecondHalfClearScreen} />
         <Stack.Screen name="全体的なレビュー" component={OverallReviewScreen} />
         <Stack.Screen name="教室レビュー" component={ClassroomReviewScreen} />
+        <Stack.Screen name="従業員詳細" component={EmployeeDetailScreen} />
         <Stack.Screen name="CSVエクスポート" component={CSVExportScreen} />
         <Stack.Screen name="落ちる" component={DropdownScreen} />
       </Stack.Navigator>

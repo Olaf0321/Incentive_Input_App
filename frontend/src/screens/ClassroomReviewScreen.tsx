@@ -1,8 +1,8 @@
-import React, {useEffect, useState} from "react";
-import { View, Text, ScrollView, StyleSheet, Alert } from "react-native";
+import React, { useEffect, useState } from "react";
+import { View, Text, ScrollView, StyleSheet, Alert, TouchableOpacity } from "react-native";
 import SERVER_URL from "../../config";
 
-const EmployeeListScreen = () => {
+const EmployeeListScreen = ({ navigation }: any) => {
     // Sample Data (Assuming received from backend)
     const [regularEmployees, setRegularEmployees] = useState([
         { name: "宮本 和弘", role: "正社員", area: "A教室" }
@@ -22,7 +22,7 @@ const EmployeeListScreen = () => {
                 }
             });
             const employeesData = await allStaff.json();
-            
+
             for (let i = 0; i < employeesData.length; i++) {
                 if (employeesData[i].type == '正社員') {
                     regularArr.push({
@@ -46,7 +46,7 @@ const EmployeeListScreen = () => {
         }
     }
 
-    useEffect(()=> {
+    useEffect(() => {
         init();
     })
 
@@ -65,11 +65,19 @@ const EmployeeListScreen = () => {
                     <Text style={styles.tableHeader}>エリア及び事業</Text>
                 </View>
                 {regularEmployees.length > 0 && regularEmployees.map((emp, index) => (
-                    <View key={index} style={styles.tableRow}>
+                    <TouchableOpacity
+                        key={index}
+                        onPress={() =>
+                            navigation.navigate('従業員詳細', {
+                                employee: emp,
+                            })
+                        }
+                        style={styles.tableRow}
+                    >
                         <Text style={styles.tableCell}>{emp.name}</Text>
                         <Text style={styles.tableCell}>{emp.role}</Text>
                         <Text style={styles.tableCell}>{emp.area}</Text>
-                    </View>
+                    </TouchableOpacity>
                 ))}
                 {regularEmployees.length == 0 &&
                     <View style={styles.tableRow}>
@@ -87,18 +95,26 @@ const EmployeeListScreen = () => {
                     <Text style={styles.tableHeader}>エリア及び事業</Text>
                 </View>
                 {partTimeEmployees.length > 0 && partTimeEmployees.map((emp, index) => (
-                    <View key={index} style={styles.tableRow}>
+                    <TouchableOpacity
+                        key={index}
+                        onPress={() =>
+                            navigation.navigate('従業員詳細', {
+                                employee: emp,
+                            })
+                        }
+                        style={styles.tableRow}
+                    >
                         <Text style={styles.tableCell}>{emp.name}</Text>
                         <Text style={styles.tableCell}>{emp.role}</Text>
                         <Text style={styles.tableCell}>{emp.area}</Text>
-                    </View>
+                    </TouchableOpacity>
                 ))}
                 {partTimeEmployees.length == 0 &&
                     <View style={styles.tableRow}>
                         <Text style={styles.tablenone}>登録されたスタッフはありません。</Text>
                     </View>
                 }
-            </View>
+            </View> 
         </ScrollView>
     );
 };
