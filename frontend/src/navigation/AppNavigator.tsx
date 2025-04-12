@@ -8,15 +8,17 @@ import DashboardScreen from "../screens/dashboard/DashboardScreen";
 import AreaBusinessRegistrationScreen from "../screens/area-registration/AreaBusinessRegistrationScreen";
 import StaffRegistrationScreen from "../screens/staff-registration/StaffRegistrationScreen";
 import IncentiveSettingsScreen from "../screens/incentive-setting/IncentiveSettingsScreen";
-import ContentViewScreen from "../screens/overall-review/ContentViewScreen";
+import ContentViewScreen from "../screens/content-view/ContentViewScreen";
 import FirstHalfClearScreen from "../screens/first-half-clear/FirstHalfClearScreen";
 import StaffDashboardScreen from "../screens/dashboard/StaffDashboardScreen";
 import SecondHalfClearScreen from "../screens/second-half-clear/SecondHalfClearScreen";
-import OverallReviewScreen from "../screens/overall-review/OverallReviewScreen";
+import OverallReviewScreen from "../screens/content-view/OverallReviewScreen";
 import ClassroomReviewScreen from "../screens/content-view/ClassroomReviewScreen";
 import CSVExportScreen from "../screens/content-view/CSVExportScreen";
 import DropdownScreen from "../screens/DropdownScreen";
-import EmployeeDetailScreen from '../screens/content-view/EmployeeDetailScreen'; // You'll make this
+import EmployeeDetailScreen from '../screens/content-view/EmployeeDetailScreen';
+import BulkEditingScreen from '../screens/content-view/BulkEditingScreen';
+import BulkEditingDetailScreen from '../screens/content-view/BulkEditingDetailScreen';
 
 const Stack = createStackNavigator();
 
@@ -36,6 +38,8 @@ const AppNavigator = () => {
         <Stack.Screen name="全体的なレビュー" component={OverallReviewScreen} />
         <Stack.Screen name="教室レビュー" component={ClassroomReviewScreen} />
         <Stack.Screen name="従業員詳細" component={EmployeeDetailScreen} />
+        <Stack.Screen name="一括編集" component={BulkEditingScreen} />
+        <Stack.Screen name="一括編集詳細" component={BulkEditingDetailScreen} />
         <Stack.Screen name="CSVエクスポート" component={CSVExportScreen} />
         <Stack.Screen name="落ちる" component={DropdownScreen} />
       </Stack.Navigator>

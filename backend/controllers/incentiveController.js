@@ -36,6 +36,7 @@ exports.createIncentive = async (req, res) => {
 exports.getAllIncentives = async (req, res) => {
   try {
     const incentives = await Incentive.find();
+    console.log('incentives', incentives);
     res.json(incentives);
   } catch (err) {
     res.status(500).json({ error: err.message });
