@@ -18,6 +18,7 @@ import CSVExportScreen from "../screens/content-view/CSVExportScreen";
 import DropdownScreen from "../screens/DropdownScreen";
 import EmployeeDetailScreen from '../screens/content-view/EmployeeDetailScreen';
 import BulkEditingScreen from '../screens/content-view/BulkEditingScreen';
+import ActivityScreen from '../screens/staff-incentive-input/ActivityScreen';
 import BulkEditingDetailScreen from '../screens/content-view/BulkEditingDetailScreen';
 
 const Stack = createStackNavigator();
@@ -41,6 +42,7 @@ const AppNavigator = () => {
         <Stack.Screen name="一括編集" component={BulkEditingScreen} />
         <Stack.Screen name="一括編集詳細" component={BulkEditingDetailScreen} />
         <Stack.Screen name="CSVエクスポート" component={CSVExportScreen} />
+        <Stack.Screen name="インセンティブ入力" component={ActivityScreen} />
         <Stack.Screen name="落ちる" component={DropdownScreen} />
       </Stack.Navigator>
     </NavigationContainer>

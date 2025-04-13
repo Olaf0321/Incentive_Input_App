@@ -1,10 +1,12 @@
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView } from "react-native";
 
-const StaffDashboardScreen = ({ navigation }: any) => {
+const StaffDashboardScreen = ({ navigation, route }: any) => {
+  const {employee} = route.params;
   const handlePress = (period: string) => {
-    console.log(`${period} ボタンが押されました`);
-    // Navigate to the corresponding input screen if needed
+    navigation.navigate('インセンティブ入力', {
+      employee: employee
+    });
   };
 
   return (

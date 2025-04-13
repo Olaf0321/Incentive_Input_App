@@ -5,13 +5,13 @@ const bcrypt = require('bcrypt')
 
 exports.init = async () => {
     try {
-        var adminClassroom = await Classroom.findOne({loginId: process.env.DEFAULT_ADMIN_LOGINID});
+        var adminClassroom = await Classroom.findOne({name: process.env.DEFAULT_ADMIN_CLASSROOM_NAME});
         if (adminClassroom) {
             
         } else {
             const salt = await bcrypt.genSalt(Number(process.env.SALT));
             await Classroom.create({
-                name: "AdminClassroom",
+                name: process.env.DEFAULT_ADMIN_CLASSROOM_NAME,
                 loginId: process.env.DEFAULT_ADMIN_LOGINID,
                 password: await bcrypt.hash(process.env.DEFAULT_ADMIN_PASSWORD, salt)
             })

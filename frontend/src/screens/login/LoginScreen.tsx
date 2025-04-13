@@ -31,8 +31,14 @@ const LoginScreen = ({ navigation }: any) => {
       console.log("data", data);
 
       if (data.code != 3) Alert.alert(`${data.msg}`);
-      else navigation.navigate('ダッシュボード');
-
+      else {
+        if (data.check) navigation.navigate('ダッシュボード');
+        else navigation.navigate('スタッフダッシュボード', {
+          employee: {
+            name: name
+          }
+        })
+      }
       // navigation.navigate('ダッシュボード');
 
     } catch (err) {

@@ -59,7 +59,7 @@ exports.updateIncentive = async (req, res) => {
   try {
     const updated = await Incentive.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
-      runValidators: true
+      // runValidators: true
     });
     if (!updated) return res.status(404).json({ message: 'Incentive not found' });
     res.json(updated);

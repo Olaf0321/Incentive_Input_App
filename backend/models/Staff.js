@@ -21,8 +21,8 @@ const staffSchema = new mongoose.Schema(
     incentiveList: [
       {
         time: {
-          type: Date,
-          default: Date.now
+          type: String,
+          required: true
         },
         incentive: {
           type: mongoose.Schema.Types.ObjectId,

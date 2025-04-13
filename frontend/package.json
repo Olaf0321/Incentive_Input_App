@@ -10,13 +10,17 @@
     "test": "jest"
   },
   "dependencies": {
+    "@expo/vector-icons": "^14.1.0",
     "@react-native-picker/picker": "^2.11.0",
     "@react-navigation/native": "^7.1.6",
     "@react-navigation/native-stack": "^7.3.10",
     "@react-navigation/stack": "^7.2.3",
+    "date-fns": "^4.1.0",
     "react": "19.0.0",
     "react-native": "0.78.1",
+    "react-native-calendars": "^1.1310.0",
     "react-native-dropdown-picker": "^5.4.6",
+    "react-native-element-dropdown": "^2.12.4",
     "react-native-gesture-handler": "^2.25.0",
     "react-native-reanimated": "^3.17.3",
     "react-native-safe-area-context": "^5.3.0",

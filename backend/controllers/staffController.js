@@ -1,5 +1,6 @@
 // controllers/staffController.js
 const Staff = require('../models/Staff');
+const Incentive = require('../models/Incentive');
 
 // CREATE a new staff
 exports.createStaff = async (req, res) => {
@@ -32,6 +33,31 @@ exports.createStaff = async (req, res) => {
   }
 };
 
+exports.addIncentive = async(req, res) => {
+  try {
+    const data = req.body;
+    console.log('data', data);
+    const {staffName, time, incentiveName, quantity} = data;
+
+    const staff = await Staff.findOne({name: staffName});
+    const incentive = await Incentive.findOne({name: incentiveName});
+
+    console.log('staff===========', staff);
+    console.log('incentive===============', incentive);
+
+    staff.incentiveList.push({
+      time: time,
+      incentive: incentive._id,
+      grade: quantity
+    });
+    const rlt = await staff.save();
+    console.log('rlt', rlt);
+
+  } catch (err) {
+    res.status(400).json({error: err.message});
+  }
+}
+
 // READ all staff
 exports.getAllStaff = async (req, res) => {
   try {
@@ -53,6 +79,21 @@ exports.getStaffById = async (req, res) => {
     const staff = await Staff.findById(req.params.id)
       .populate('classroom')
       .populate('incentiveList.incentive');
+    if (!staff) return res.status(404).json({ message: 'Staff not found' });
+    res.json(staff);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+// READ one staff by Name
+exports.getStaffByName = async (req, res) => {
+  try {
+    const staff = await Staff.findOne({name: req.params.name})
+      .populate('classroom')
+      .populate('incentiveList.incentive');
+    
+    console.log('staff************', staff);
     if (!staff) return res.status(404).json({ message: 'Staff not found' });
     res.json(staff);
   } catch (err) {

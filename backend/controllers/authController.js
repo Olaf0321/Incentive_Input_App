@@ -39,9 +39,14 @@ exports.login = async (req, res) => {
         })
         return
     }
+    console.log('name', name);
+    let flag = false;
+    console.log('process.env.default_admin_name', process.env.DEFAULT_ADMIN_NAME);
+    if (name == process.env.DEFAULT_ADMIN_NAME) flag = true;
+    console.log('flag', flag);
     res.status(201).json({
         code: 3,
-        msg: '正しくログインしました。'
+        check: flag
     })
   } catch (err) {
     res.status(400).json({ error: err.message });
