@@ -63,14 +63,28 @@ const ActivityScreen = ({ route }: any) => {
   const [currentMonth, setCurrentMonth] = useState(new Date());
 
 
-  const openInputModal = (date: string) => {
-    if (date < startDate || date > endDate) {
-      Alert.alert('日付が無効であるため入力できません。');
-    } else {
-      setSelectedDate(date);
-      setSelectedItem(staticItems[0]?.name || '');
-      setInputQuantity('');
-      setInputModalVisible(true);
+  const openInputModal = async (date: string) => {
+    try {
+      const response = await fetch(`${SERVER_URL}api/inputPossibility/${status}`, {
+        method: 'GET',
+        headers: {"Content-Type": "application/json",}
+      });
+
+      const data = await response.json();
+
+      if (date < startDate || date > endDate) {
+        Alert.alert('日付が無効であるため入力できません。');
+      } else if (data.status == false){
+        Alert.alert('管理者によって入力が制限されています。');
+      } else {
+        setSelectedDate(date);
+        setSelectedItem(staticItems[0]?.name || '');
+        setInputQuantity('');
+        setInputModalVisible(true);
+      }
+
+    } catch (err) {
+      Alert.alert(`error: ${err}`);
     }
   };
 
