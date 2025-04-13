@@ -44,29 +44,34 @@ type Classroom = {
 type EmpData = {
   name: string,
   type: string;
-  classroom: Classroom,
-  incentiveList: IncentiveEntry[];
 };
 
 const ActivityScreen = ({ route }: any) => {
   const [notes, setNotes] = useState<{ [date: string]: { item: string; quantity: number }[] }>({});
+  const [incentivesGrade, setIncentivesGrade] = useState<{ [date: string]: number}>({});
   const [selectedDate, setSelectedDate] = useState<string>('');
   const [dataModalVisible, setDataModalVisible] = useState(false);
   const [inputModalVisible, setInputModalVisible] = useState(false);
   const [inputQuantity, setInputQuantity] = useState('');
   const [staticItems, setStaticItems] = useState([{ name: 'Apples', type: '', unit_price: 1, upper_limit: 1, id: 0 }]);
   const [selectedItem, setSelectedItem] = useState('Apples');
+  const [startDate, setStartDate] = useState(String);
+  const [endDate, setEndDate] = useState(String);
 
-  const { employee } = route.params;
+  const { employee, status } = route.params;
   const [incentives, setIncentives] = useState([{ name: 'Apples', type: '', unit_price: 1, upper_limit: 1, id: 0 }]);
   const [currentMonth, setCurrentMonth] = useState(new Date());
 
 
   const openInputModal = (date: string) => {
-    setSelectedDate(date);
-    setSelectedItem(staticItems[0]?.name || '');
-    setInputQuantity('');
-    setInputModalVisible(true);
+    if (date < startDate || date > endDate) {
+      Alert.alert('日付が無効であるため入力できません。');
+    } else {
+      setSelectedDate(date);
+      setSelectedItem(staticItems[0]?.name || '');
+      setInputQuantity('');
+      setInputModalVisible(true);
+    }
   };
 
   const openDataModal = (date: string) => {
@@ -83,8 +88,13 @@ const ActivityScreen = ({ route }: any) => {
           { item: selectedItem, quantity: parseInt(inputQuantity) },
         ],
       }));
+      setIncentivesGrade(prev => ({
+        ...prev,
+        [selectedItem]: prev[selectedItem] + parseInt(inputQuantity)
+      }))
     }
-    setInputModalVisible(false);
+    setInputQuantity('');
+    Alert.alert(`正確に入力されました。`);
     try {
       const response = await fetch(`${SERVER_URL}api/staff/add_incentive`, {
         method: 'POST',
@@ -142,18 +152,40 @@ const ActivityScreen = ({ route }: any) => {
         id: i,
       }));
 
-      for (let i = 0;  i < 20; i++) {
-        arr.push({
-          name: '1',
-          type: '123',
-          unit_price: 12,
-          upper_limit: 10
-        })
-      }
+      arr.map((ele: any) => {
+        setIncentives(prev => ([
+          ...prev, ele
+        ]));
+
+        setIncentivesGrade(prev => ({
+          ...prev,
+          [ele.name]: 0
+        }))
+      })
+
       setIncentives([...arr]);
       setStaticItems([...arr]);
 
-      empData.incentiveList.map((ele) => {
+      const currentYear = new Date().getFullYear();
+      const currentMonth = new Date().getMonth() + 1;
+
+      const incentiveReq = await fetch(`${SERVER_URL}api/staff/incentives/`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: employee.name,
+          currentYear: currentYear,
+          currentMonth: currentMonth,
+          status: status
+        })
+      });
+
+      const incentiveList = await incentiveReq.json();
+
+      setStartDate(incentiveList.st);
+      setEndDate(incentiveList.ed);
+
+      incentiveList.arr.map((ele: any) => {
         setNotes(prev => ({
           ...prev,
           [ele.time]: [
@@ -161,7 +193,17 @@ const ActivityScreen = ({ route }: any) => {
             { item: ele.incentive.name, quantity: ele.grade },
           ],
         }));
+
+        console.log('intial value ======== ', incentivesGrade[ele.incentive.name])
       });
+
+      incentiveList.arr.map((ele: any) => {
+        setIncentivesGrade(prev => ({
+          ...prev,
+          [ele.incentive.name]: prev[ele.incentive.name] + ele.grade
+        }))
+      })
+
     } catch (err) {
       Alert.alert(`error: ${err}`);
     }
@@ -174,7 +216,8 @@ const ActivityScreen = ({ route }: any) => {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.header}>インセンティブ入力アプリ</Text>
-      <Text style={styles.subHeader}>上期 入力</Text>
+      <Text style={styles.subHeader}>{status}</Text>
+      <Text style={styles.title}>{startDate} ~ {endDate}</Text>
       <Calendar
         markedDates={getMarkedDates()}
         onDayPress={(day) => {
@@ -217,7 +260,10 @@ const ActivityScreen = ({ route }: any) => {
                   <View key={index} style={styles.tableRow}>
                     <Text style={styles.tableCell}>{incentive.name}</Text>
                     <Text style={styles.tableCell}>{incentive.unit_price}</Text>
-                    <Text style={styles.tableCell}>{incentive.upper_limit}</Text>
+                    <Text style={styles.tableCell}>
+                      {/* {incentivesGrade[incentive.name] > incentive.upper_limit ? incentive.upper_limit : incentivesGrade[incentive.name]}/{incentive.upper_limit} */}
+                      {incentivesGrade[incentive.name]}/{incentive.upper_limit}
+                    </Text>
                   </View>
                 ))}
                 {incentives.length == 0 &&
@@ -236,48 +282,6 @@ const ActivityScreen = ({ route }: any) => {
       </Modal>
 
       {/* Input Modal */}
-      {/* <Modal visible={inputModalVisible} transparent animationType="fade">
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>{selectedDate} インセンティブ</Text>
-            {notes[selectedDate] ? (
-              notes[selectedDate].map((entry, idx) => (
-                <Text key={idx}>{entry.item} - {entry.quantity}</Text>
-              ))
-            ) : (
-              <Text>入力したインセンティブはありません。</Text>
-            )}
-            <Text style={styles.modalSecondTitle}>{selectedDate} インセンティブ入力</Text>
-            <Dropdown
-              style={styles.dropdown}
-              placeholderStyle={styles.placeholderStyle}
-              selectedTextStyle={styles.selectedTextStyle}
-              data={staticItems}
-              maxHeight={300}
-              labelField="name"
-              valueField="name"
-              placeholder="Select item"
-              value={selectedItem}
-              onChange={(item: any) => {
-                setSelectedItem(item.name);
-              }}
-            />
-            <TextInput
-              value={inputQuantity}
-              onChangeText={setInputQuantity}
-              placeholder="実施回数"
-              keyboardType="numeric"
-              style={styles.input}
-            />
-            <TouchableOpacity onPress={saveInput} style={styles.saveButton}>
-              <Text style={styles.saveText}>保管</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => setInputModalVisible(false)} style={styles.cancelButton}>
-              <Text style={styles.cancelText}>キャンセル</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal> */}
       <Modal visible={inputModalVisible} transparent animationType="fade">
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
@@ -337,8 +341,15 @@ const styles = StyleSheet.create({
   subHeader: {
     fontSize: 18,
     color: "#555",
-    marginBottom: 100,
+    marginBottom: 50,
     marginInline: "auto"
+  },
+  title: {
+    fontSize: 18,
+    color: "#000000",
+    marginBottom: 40,
+    marginInline: "auto",
+    fontWeight: "bold"
   },
   modalOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'center', alignItems: 'center'},
   modalContent: { width: '85%', backgroundColor: '#fff', padding: 20, borderRadius: 10, marginTop: 20 },
@@ -351,7 +362,7 @@ const styles = StyleSheet.create({
   saveButton: { backgroundColor: '#2B5DAE', padding: 10, borderRadius: 5, alignItems: 'center', marginTop: 10 },
   saveText: { color: '#fff', fontWeight: 'bold' },
   cancelButton: { marginTop: 10, alignItems: 'center', backgroundColor: "#999", borderRadius: 5 },
-  cancelText: { color: '#FFFFFF', marginTop: 5, marginBottom: 15, fontWeight: 'bold' },
+  cancelText: { color: '#FFFFFF', marginTop: 5, marginBottom: 10, fontWeight: 'bold' },
   table: {
     borderWidth: 1,
     borderColor: "#000",

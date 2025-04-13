@@ -7,6 +7,7 @@ const classroomRoutes = require('./routes/classroomRoutes');
 const staffRoutes = require('./routes/staffRoutes');
 const incentiveRoutes = require('./routes/incentiveRoutes');
 const adminSetting = require('./config/admin');
+const InputPossibilityRoutes = require('./routes/inputPossibility');
 
 require('dotenv').config();
 
@@ -21,5 +22,6 @@ app.use('/api/auth', authRoutes);
 app.use('/api/classrooms', classroomRoutes);
 app.use('/api/staff', staffRoutes);
 app.use('/api/incentive', incentiveRoutes);
+app.use('/api/inputPossibility', InputPossibilityRoutes);
 
 module.exports = app;

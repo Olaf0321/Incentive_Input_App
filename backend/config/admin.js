@@ -1,5 +1,6 @@
 // controllers/classroomController.js
 const Classroom = require('../models/Classroom');
+const InputPossibility = require('../models/InputPossibility');
 const Staff = require('../models/Staff');
 const bcrypt = require('bcrypt')
 
@@ -20,6 +21,16 @@ exports.init = async () => {
                 name: "Admin",
                 type: "正社員",
                 classroom: response._id
+            })
+
+            await InputPossibility.create({
+                period: '上期入力',
+                status: true
+            })
+
+            await InputPossibility.create({
+                period: '下期入力',
+                status: true
             })
         }
     } catch (err) {

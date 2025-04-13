@@ -5,7 +5,8 @@ const StaffDashboardScreen = ({ navigation, route }: any) => {
   const {employee} = route.params;
   const handlePress = (period: string) => {
     navigation.navigate('インセンティブ入力', {
-      employee: employee
+      employee: employee,
+      status: period
     });
   };
 

@@ -58,6 +58,64 @@ exports.addIncentive = async(req, res) => {
   }
 }
 
+const getLastYear = (currentYear) => {
+  const numberOfCurrentYear = Number(currentYear);
+  const numberOfLastYear = numberOfCurrentYear - 1;
+  const stringOfLastYear = String(numberOfLastYear);
+  return stringOfLastYear;
+}
+
+const getNextYear = (currentYear) => {
+  const numberOfCurrentYear = Number(currentYear);
+  const numberOfNextYear = numberOfCurrentYear + 1;
+  const stringOfNextYear = String(numberOfNextYear);
+  return stringOfNextYear;
+}
+
+//Read incentive list by date
+exports.getIncentivesListByDate = async(req, res) => {
+  try {
+    const data = req.body;
+    console.log('data', data);
+    const {name, currentYear, currentMonth, status} = data;
+
+    const staff = await Staff.findOne({name: name})
+      .populate('classroom')
+      .populate('incentiveList.incentive');
+    const incentivesList = staff.incentiveList;
+
+    let st = '', ed = '';
+
+    if (status == '上期入力') {
+      if (currentMonth < '04') {
+        const lastYear = getLastYear(currentYear);
+        st = `${lastYear}-04-01`, ed = `${lastYear}-09-30`;
+      } else {
+        st = `${currentYear}-04-01`, ed = `${currentYear}-09-30`;
+      }
+    } else {
+      if (currentMonth < '10') {
+        const lastYear = getLastYear(currentYear);
+        st = `${lastYear}-10-01`, ed = `${currentYear}-03-31`;
+      } else {
+        const nextYear = getNextYear(currentYear);
+        st = `${currentYear}-10-01`, ed = `${nextYear}-03-31`;
+      }
+    }
+    
+    console.log('st=======', st);
+    console.log('ed=======', ed);
+
+    const result = staff.incentiveList.filter(ele=>
+      ele.time >= st && ele.time <= ed);
+    
+    console.log('result=========', result);
+    res.status(200).json({arr: result, st: st, ed: ed});
+  } catch (err) {
+    res.status(400).json({error: err.message});
+  }
+}
+
 // READ all staff
 exports.getAllStaff = async (req, res) => {
   try {
@@ -95,7 +153,7 @@ exports.getStaffByName = async (req, res) => {
     
     console.log('staff************', staff);
     if (!staff) return res.status(404).json({ message: 'Staff not found' });
-    res.json(staff);
+    res.json({name: staff.name, type: staff.type});
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
