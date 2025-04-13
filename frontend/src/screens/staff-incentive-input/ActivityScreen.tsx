@@ -141,6 +141,15 @@ const ActivityScreen = ({ route }: any) => {
         upper_limit: d.upper_limit,
         id: i,
       }));
+
+      for (let i = 0;  i < 20; i++) {
+        arr.push({
+          name: '1',
+          type: '123',
+          unit_price: 12,
+          upper_limit: 10
+        })
+      }
       setIncentives([...arr]);
       setStaticItems([...arr]);
 
@@ -196,39 +205,38 @@ const ActivityScreen = ({ route }: any) => {
       <Modal visible={dataModalVisible} transparent animationType="fade">
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
+            <ScrollView contentContainerStyle={styles.scrollContent}>
+              <View style={styles.table}>
+                <View style={styles.tableRowHeader}>
+                  <Text style={styles.tableHeader}>インセンティブ項目</Text>
+                  <Text style={styles.tableHeader}>単価</Text>
+                  <Text style={styles.tableHeader}>上限回数</Text>
+                </View>
 
-            <View style={styles.table}>
-              <View style={styles.tableRowHeader}>
-                <Text style={styles.tableHeader}>インセンティブ項目</Text>
-                <Text style={styles.tableHeader}>上限回数</Text>
-                <Text style={styles.tableHeader}>単価</Text>
-                <Text style={styles.tableHeader}></Text>
+                {incentives.length > 0 && incentives.map((incentive, index) => (
+                  <View key={index} style={styles.tableRow}>
+                    <Text style={styles.tableCell}>{incentive.name}</Text>
+                    <Text style={styles.tableCell}>{incentive.unit_price}</Text>
+                    <Text style={styles.tableCell}>{incentive.upper_limit}</Text>
+                  </View>
+                ))}
+                {incentives.length == 0 &&
+                  <View style={styles.tableRow}>
+                    <Text style={styles.tablenone}>登録された項目はありません。</Text>
+                  </View>
+                }
               </View>
-
-              {incentives.length > 0 && incentives.map((incentive, index) => (
-                <View key={index} style={styles.tableRow}>
-                  <Text style={styles.tableCell}>{incentive.name}</Text>
-                  <Text style={styles.tableCell}>{incentive.upper_limit}</Text>
-                  <Text style={styles.tableCell}>{incentive.unit_price}</Text>
-                  <Text style={styles.tableCell}></Text>
-                </View>
-              ))}
-              {incentives.length == 0 &&
-                <View style={styles.tableRow}>
-                  <Text style={styles.tablenone}>登録された項目はありません。</Text>
-                </View>
-              }
-            </View>
+            </ScrollView>
 
             <TouchableOpacity onPress={() => setDataModalVisible(false)} style={styles.cancelButton}>
-              <Text style={styles.cancelText}>Close</Text>
+              <Text style={styles.cancelText}>閉じる</Text>
             </TouchableOpacity>
           </View>
         </View>
       </Modal>
 
       {/* Input Modal */}
-      <Modal visible={inputModalVisible} transparent animationType="fade">
+      {/* <Modal visible={inputModalVisible} transparent animationType="fade">
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
             <Text style={styles.modalTitle}>{selectedDate} インセンティブ</Text>
@@ -269,6 +277,50 @@ const ActivityScreen = ({ route }: any) => {
             </TouchableOpacity>
           </View>
         </View>
+      </Modal> */}
+      <Modal visible={inputModalVisible} transparent animationType="fade">
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <ScrollView contentContainerStyle={styles.scrollContent}>
+              <Text style={styles.modalTitle}>{selectedDate} インセンティブ</Text>
+              {notes[selectedDate] ? (
+                notes[selectedDate].map((entry, idx) => (
+                  <Text key={idx}>{entry.item} - {entry.quantity}</Text>
+                ))
+              ) : (
+                <Text>入力したインセンティブはありません。</Text>
+              )}
+              <Text style={styles.modalSecondTitle}>{selectedDate} インセンティブ入力</Text>
+              <Dropdown
+                style={styles.dropdown}
+                placeholderStyle={styles.placeholderStyle}
+                selectedTextStyle={styles.selectedTextStyle}
+                data={staticItems}
+                maxHeight={300}
+                labelField="name"
+                valueField="name"
+                placeholder="Select item"
+                value={selectedItem}
+                onChange={(item: any) => {
+                  setSelectedItem(item.name);
+                }}
+              />
+              <TextInput
+                value={inputQuantity}
+                onChangeText={setInputQuantity}
+                placeholder="実施回数"
+                keyboardType="numeric"
+                style={styles.input}
+              />
+              <TouchableOpacity onPress={saveInput} style={styles.saveButton}>
+                <Text style={styles.saveText}>保管</Text>
+              </TouchableOpacity>
+            </ScrollView>
+            <TouchableOpacity onPress={() => setInputModalVisible(false)} style={styles.cancelButton}>
+              <Text style={styles.cancelText}>閉じる</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
       </Modal>
     </ScrollView>
   );
@@ -288,16 +340,18 @@ const styles = StyleSheet.create({
     marginBottom: 100,
     marginInline: "auto"
   },
-  modalOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'center', alignItems: 'center' },
-  modalContent: { width: '85%', backgroundColor: '#fff', padding: 20, borderRadius: 10 },
+  modalOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'center', alignItems: 'center'},
+  modalContent: { width: '85%', backgroundColor: '#fff', padding: 20, borderRadius: 10, marginTop: 20 },
   modalTitle: { fontSize: 18, fontWeight: 'bold', marginBottom: 10 },
   modalSecondTitle: { fontSize: 18, fontWeight: 'bold', marginBottom: 10, marginTop: 20 },
-  picker: { marginVertical: 10, },
+  scrollContent: {
+    paddingBottom: 0,
+  },
   input: { borderWidth: 1, borderColor: '#ccc', padding: 8, borderRadius: 5, marginVertical: 10 },
   saveButton: { backgroundColor: '#2B5DAE', padding: 10, borderRadius: 5, alignItems: 'center', marginTop: 10 },
   saveText: { color: '#fff', fontWeight: 'bold' },
-  cancelButton: { marginTop: 10, alignItems: 'center' },
-  cancelText: { color: '#999' },
+  cancelButton: { marginTop: 10, alignItems: 'center', backgroundColor: "#999", borderRadius: 5 },
+  cancelText: { color: '#FFFFFF', marginTop: 5, marginBottom: 15, fontWeight: 'bold' },
   table: {
     borderWidth: 1,
     borderColor: "#000",
