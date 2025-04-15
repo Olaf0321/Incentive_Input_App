@@ -7,14 +7,14 @@ exports.createStaff = async (req, res) => {
   try {
     const staff = new Staff(req.body);
     console.log("staff", staff);
-    const {name, type, classroom} = staff;
-    const response = await Staff.findOne({name: name});
+    const { name, type, classroom } = staff;
+    const response = await Staff.findOne({ name: name });
 
     console.log('response', response);
 
     if (response != null) {
       res.status(200).json({
-        code : 0,
+        code: 0,
         msg: "すでに登録されている名前です。"
       })
     } else {
@@ -33,14 +33,14 @@ exports.createStaff = async (req, res) => {
   }
 };
 
-exports.addIncentive = async(req, res) => {
+exports.addIncentive = async (req, res) => {
   try {
     const data = req.body;
     console.log('data', data);
-    const {staffName, time, incentiveName, quantity} = data;
+    const { staffName, time, incentiveName, quantity } = data;
 
-    const staff = await Staff.findOne({name: staffName});
-    const incentive = await Incentive.findOne({name: incentiveName});
+    const staff = await Staff.findOne({ name: staffName });
+    const incentive = await Incentive.findOne({ name: incentiveName });
 
     console.log('staff===========', staff);
     console.log('incentive===============', incentive);
@@ -54,7 +54,7 @@ exports.addIncentive = async(req, res) => {
     console.log('rlt', rlt);
 
   } catch (err) {
-    res.status(400).json({error: err.message});
+    res.status(400).json({ error: err.message });
   }
 }
 
@@ -72,14 +72,14 @@ const getNextYear = (currentYear) => {
   return stringOfNextYear;
 }
 
-//Read incentive list by date
-exports.getIncentivesListByDate = async(req, res) => {
+//Read incentive list by period
+exports.getIncentivesListByPeriod = async (req, res) => {
   try {
     const data = req.body;
     console.log('data', data);
-    const {name, currentYear, currentMonth, status} = data;
+    const { name, currentYear, currentMonth, status } = data;
 
-    const staff = await Staff.findOne({name: name})
+    const staff = await Staff.findOne({ name: name })
       .populate('classroom')
       .populate('incentiveList.incentive');
     const incentivesList = staff.incentiveList;
@@ -102,17 +102,193 @@ exports.getIncentivesListByDate = async(req, res) => {
         st = `${currentYear}-10-01`, ed = `${nextYear}-03-31`;
       }
     }
-    
+
     console.log('st=======', st);
     console.log('ed=======', ed);
 
-    const result = staff.incentiveList.filter(ele=>
+    const result = staff.incentiveList.filter(ele =>
       ele.time >= st && ele.time <= ed);
-    
+
     console.log('result=========', result);
-    res.status(200).json({arr: result, st: st, ed: ed});
+    res.status(200).json({ arr: result, st: st, ed: ed });
   } catch (err) {
-    res.status(400).json({error: err.message});
+    res.status(400).json({ error: err.message });
+  }
+}
+
+const getFebruaryDates = (stringOfYear) => {
+  const numberOfYear = Number(stringOfYear);
+  const month = 1; // February (0 = Jan, 1 = Feb, etc.)
+  const daysInFebruary = new Date(numberOfYear, month + 1, 0).getDate(); // 28 or 29
+
+  const stringOfDaysInFeburary = String(daysInFebruary);
+  return stringOfDaysInFeburary;
+}
+
+const dates = {
+  '01': '31',
+  '02': '28',
+  '03': '31',
+  '04': '30',
+  '05': '31',
+  '06': '30',
+  '07': '31',
+  '08': '31',
+  '09': '30',
+  '10': '31',
+  '11': '30',
+  '12': '31',
+}
+
+const changeMonth = (month) => {
+  return month.length == 1 ? `0${month}`: month
+}
+
+//Read incentive list by month
+exports.getIncentivesListByMonth = async (req, res) => {
+  try {
+    const data = req.body;
+    console.log('data', data);
+    const { name, selectedYear, oldSelectedMonth } = data;
+
+    const selectedMonth = changeMonth(oldSelectedMonth);
+
+    const staff = await Staff.findOne({ name: name })
+      .populate('classroom')
+      .populate('incentiveList.incentive');
+
+    let st = '', ed = '';
+
+    if (selectedMonth != '02') {
+      st = `${selectedYear}-${selectedMonth}-01`;
+      ed = `${selectedYear}-${selectedMonth}-${dates[selectedMonth]}`;
+    } else {
+      const dateOfFeburary = getFebruaryDates(selectedYear);
+      st = `${selectedYear}-${selectedMonth}-01`;
+      ed = `${selectedYear}-${selectedMonth}-${dateOfFeburary}`;
+    }
+
+    console.log('st***********', st);
+    console.log('ed***********', ed);
+
+    const result = staff.incentiveList.filter(ele =>
+      ele.time >= st && ele.time <= ed);
+
+    const newAmountArr = {};
+
+    result.map(ele => newAmountArr[ele.incentive.name] = 0);
+    result.map(ele => newAmountArr[ele.incentive.name] += ele.grade);
+
+    res.status(200).json({ arr: newAmountArr });
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+}
+
+//Change incentiveList
+exports.changeIncentivesList = async (req, res) => {
+  console.log('HHHHHHHHHHHHHHHH');
+  try {
+    const data = req.body;
+    console.log('data', data);
+    const { name, selectedYear, oldSelectedMonth, incentiveName, amount } = data;
+
+    const selectedMonth = changeMonth(oldSelectedMonth);
+
+    const staff = await Staff.findOne({ name: name })
+      .populate('classroom')
+      .populate('incentiveList.incentive');
+
+    let st = '', ed = '';
+
+    if (selectedMonth != '02') {
+      st = `${selectedYear}-${selectedMonth}-01`;
+      ed = `${selectedYear}-${selectedMonth}-${dates[selectedMonth]}`;
+    } else {
+      const dateOfFeburary = getFebruaryDates(selectedYear);
+      st = `${selectedYear}-${selectedMonth}-01`;
+      ed = `${selectedYear}-${selectedMonth}-${dateOfFeburary}`;
+    }
+
+    const result = staff.incentiveList.filter(ele =>
+      ele.time >= st && ele.time <= ed && ele.incentive.name == incentiveName);
+
+    console.log('result-incentiveList', result);
+
+    let realAmount = 0;
+  
+    for (let i = 0; i < result.length; i++) {
+      let ele = result[i];
+      console.log('grade', ele.grade);
+      realAmount += Number(ele.grade);
+    }
+    
+    console.log('real-amount', realAmount);
+
+    const rlt = await Incentive.findOne({name: incentiveName});
+
+    console.log('rlt', rlt);
+
+    if (realAmount < amount) {
+      staff.incentiveList.push({
+        time: ed,
+        incentive: rlt._id,
+        grade: amount - realAmount
+      });
+      const newItem = await staff.save();
+      console.log('newItem correctly created!!!', newItem);
+    }
+    else if (realAmount > amount) {
+      let deletedData = [];
+      let updatedData = {};
+      const differ = realAmount - amount;
+      let curGrade = 0;
+      for (let i = 0; i < result.length; i++) {
+        let ele = result[i];
+        let val = curGrade + Number(ele.grade);
+        if (val < differ) {
+          deletedData.push({
+            id: ele._id
+          });
+          curGrade = val;
+        } else if (val > differ) {
+          updatedData = {
+            id: ele._id,
+            updatedGrade: val - differ
+          };
+          break;
+        } else {
+          deletedData.push({
+            id: ele._id
+          });
+          break;
+        }
+      }
+      let newIncentiveList = [];
+      for (let i = 0; i < staff.incentiveList.length; i++) {
+        const ele = staff.incentiveList[i];
+        let flag = false;
+        for (let j = 0; j < deletedData.length; j++) {
+          if (ele._id != deletedData[j].id) continue;
+          flag = true; break;
+        }
+        if (flag == true) continue;
+        if (ele._id == updatedData.id) {
+          let updatedIncentive = ele;
+          updatedIncentive.grade = updatedData.updatedGrade;
+          newIncentiveList.push(updatedIncentive);
+        } else {
+          newIncentiveList.push(ele);
+        }
+      }
+      console.log(newIncentiveList, 'newIncentiveList');
+      staff.incentiveList = newIncentiveList;
+      const newStaff = await staff.save();
+      console.log('decrease correctly: ', newStaff);
+    }
+    res.status(200).json({ arr: newAmountArr });
+  } catch (err) {
+    res.status(400).json({ error: err.message });
   }
 }
 
@@ -122,9 +298,9 @@ exports.getAllStaff = async (req, res) => {
     const staffList = await Staff.find()
       .populate('classroom')
       .populate('incentiveList.incentive');
-    
-    const realStaffList = staffList.filter(item=>item.name !== 'Admin');
-    
+
+    const realStaffList = staffList.filter(item => item.name !== 'Admin');
+
     res.status(200).json(realStaffList);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -147,13 +323,13 @@ exports.getStaffById = async (req, res) => {
 // READ one staff by Name
 exports.getStaffByName = async (req, res) => {
   try {
-    const staff = await Staff.findOne({name: req.params.name})
+    const staff = await Staff.findOne({ name: req.params.name })
       .populate('classroom')
       .populate('incentiveList.incentive');
-    
+
     console.log('staff************', staff);
     if (!staff) return res.status(404).json({ message: 'Staff not found' });
-    res.json({name: staff.name, type: staff.type});
+    res.json({ name: staff.name, type: staff.type });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

@@ -183,7 +183,7 @@ const ActivityScreen = ({ route }: any) => {
       const currentYear = new Date().getFullYear();
       const currentMonth = new Date().getMonth() + 1;
 
-      const incentiveReq = await fetch(`${SERVER_URL}api/staff/incentives/`, {
+      const incentiveReq = await fetch(`${SERVER_URL}api/staff/incentives/period`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

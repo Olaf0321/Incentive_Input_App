@@ -1,9 +1,36 @@
 import React from "react";
-import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, Alert } from "react-native";
+import SERVER_URL from "../../../config";
 
 const FirstHalfClearScreen = ({ navigation }: any) => {
-  const handlePress = (screen: string) => {
-    navigation.navigate(screen);
+  const handlePress = async (screen: string) => {
+    try {
+      let period = '上期入力';
+      let status: Boolean = false;
+      if (screen == "FirstHalfCloseScreen") status = true;
+      else status = false;
+      const response = await fetch(`${SERVER_URL}api/inputPossibility/${period}`, {
+        method: 'PUT',
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          period: period,
+          status: status
+        })
+      });
+      const data = await response.json();
+      if (screen == 'FirstHalfCloseScreen') {
+        Alert.alert('上期締の入力が制限されました。');
+      } else if (screen == 'FirstHalfRecoveryScreen') {
+        Alert.alert('上期締の入力が復帰しました。');
+      } else {
+        Alert.alert('上期締のデータを削除しました。');
+      }
+    } catch (err) {
+      Alert.alert(`error: ${err}`);
+    }
+    // navigation.navigate(screen);
   };
 
   return (

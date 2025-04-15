@@ -5,7 +5,9 @@ const staffCtrl = require('../controllers/staffController');
 
 router.post('/', staffCtrl.createStaff);
 router.post('/add_incentive', staffCtrl.addIncentive);
-router.post('/incentives', staffCtrl.getIncentivesListByDate);
+router.post('/incentives/period', staffCtrl.getIncentivesListByPeriod);
+router.post('/incentives/month', staffCtrl.getIncentivesListByMonth);
+router.post('/incentives/change', staffCtrl.changeIncentivesList);
 router.get('/', staffCtrl.getAllStaff);
 router.get('/:id', staffCtrl.getStaffById);
 router.get('/name/:name', staffCtrl.getStaffByName);

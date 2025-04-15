@@ -80,7 +80,7 @@ const EmployeeListScreen = () => {
 
     useEffect(()=> {
         init();
-    })
+    }, [])
 
     return (
         <ScrollView style={styles.container}>

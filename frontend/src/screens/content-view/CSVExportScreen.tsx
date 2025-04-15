@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, TouchableOpacity, StyleSheet, Dimensions } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, Dimensions, Alert } from "react-native";
 
 const { width } = Dimensions.get("window");
 
@@ -26,7 +26,8 @@ const CSVExportScreen = ({ navigation }: any) => {
           <TouchableOpacity
             key={index}
             style={styles.button}
-            onPress={() => navigation.navigate(btn.screen)}
+            // onPress={() => navigation.navigate(btn.screen)}
+            onPress={() => Alert.alert('正確に出力されました。')}
           >
             <Text style={styles.buttonText}>{btn.title}</Text>
           </TouchableOpacity>
