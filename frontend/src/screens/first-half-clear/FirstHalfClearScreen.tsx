@@ -7,8 +7,8 @@ const FirstHalfClearScreen = ({ navigation }: any) => {
     try {
       let period = '上期入力';
       let status: Boolean = false;
-      if (screen == "FirstHalfCloseScreen") status = true;
-      else status = false;
+      if (screen == "FirstHalfCloseScreen") status = false;
+      else status = true;
       const response = await fetch(`${SERVER_URL}api/inputPossibility/${period}`, {
         method: 'PUT',
         headers: {
