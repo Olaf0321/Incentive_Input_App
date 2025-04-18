@@ -10,7 +10,7 @@ const staffSchema = new mongoose.Schema(
     },
     type: {
       type: String,
-      enum: ['正社員', 'パートアルバイト'],
+      enum: ['正社員', 'パートアルバイト', 'Admin'],
       required: true
     },
     classroom: {

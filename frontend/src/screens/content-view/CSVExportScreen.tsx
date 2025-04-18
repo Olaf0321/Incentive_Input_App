@@ -1,24 +1,48 @@
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet, Dimensions, Alert } from "react-native";
+import FirstHalfExcelOutput from '../../components/FirstHalfExcelOutput'
+import SERVER_URL from "../../../config";
 
 const { width } = Dimensions.get("window");
 
 const CSVExportScreen = ({ navigation }: any) => {
   const buttons = [
-    { title: "上期一括\nCSV出力", screen: "FirstHalfCSVOutputScreen" },
-    { title: "下期一括\nCSV出力", screen: "SecondHalfCSVOutputScreen" },
-    { title: "上期エリア、\n事業ごと\nCSV出力", screen: "FirstHalfAreaCSVOutputScreen" },
-    { title: "下期エリア、\n事業ごと\nCSV出力", screen: "SecondHalfAreaCSVOutputScreen" },
-    { title: "上期個別\nCSV出力", screen: "FirstHalfIndividualCSVOutputScreen" },
-    { title: "下期個別\nCSV出力", screen: "SecondHalfIndividualCSVOutputScreen" },
+    { title: "上期一括\nCSV出力", content: "FirstHalfCSVOutputScreen" },
+    { title: "下期一括\nCSV出力", content: "SecondHalfCSVOutputScreen" },
+    { title: "上期エリア、\n事業ごと\nCSV出力", content: "FirstHalfAreaCSVOutputScreen" },
+    { title: "下期エリア、\n事業ごと\nCSV出力", content: "SecondHalfAreaCSVOutputScreen" },
+    { title: "上期個別\nCSV出力", content: "FirstHalfIndividualCSVOutputScreen" },
+    { title: "下期個別\nCSV出力", content: "SecondHalfIndividualCSVOutputScreen" },
   ];
+
+  const handleExcelFile = async (ele: any) => {
+    try {
+      const response = await fetch(`${SERVER_URL}api/excel-output`, {
+        method: 'POST',
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          type: ele.title
+        })
+      });
+
+      const data = await response.json();
+      if (ele.content == 'FirstHalfCSVOutputScreen') {
+        FirstHalfExcelOutput(data.regularData, data.partTimeData, data.title);
+      }
+      Alert.alert(`${ele.content}`);
+    } catch (err) {
+      Alert.alert(`error: ${err}`);
+    }
+  }
 
   return (
     <View style={styles.container}>
       {/* Header */}
-    <Text style={styles.headerText}>内容閲覧・全体・各教室・編集・CSV出力</Text>
-    <Text style={styles.subtitle}>CSV出力</Text>
-      
+      <Text style={styles.headerText}>内容閲覧・全体・各教室・編集・CSV出力</Text>
+      <Text style={styles.subtitle}>CSV出力</Text>
+
 
       {/* Button Grid */}
       <View style={styles.gridContainer}>
@@ -27,7 +51,7 @@ const CSVExportScreen = ({ navigation }: any) => {
             key={index}
             style={styles.button}
             // onPress={() => navigation.navigate(btn.screen)}
-            onPress={() => Alert.alert('正確に出力されました。')}
+            onPress={() => handleExcelFile(btn)}
           >
             <Text style={styles.buttonText}>{btn.title}</Text>
           </TouchableOpacity>

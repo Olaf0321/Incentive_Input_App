@@ -8,6 +8,7 @@ const staffRoutes = require('./routes/staffRoutes');
 const incentiveRoutes = require('./routes/incentiveRoutes');
 const adminSetting = require('./config/admin');
 const InputPossibilityRoutes = require('./routes/inputPossibility');
+const excelOutputRoutes = require('./routes/excelOutput');
 
 require('dotenv').config();
 
@@ -23,5 +24,5 @@ app.use('/api/classrooms', classroomRoutes);
 app.use('/api/staff', staffRoutes);
 app.use('/api/incentive', incentiveRoutes);
 app.use('/api/inputPossibility', InputPossibilityRoutes);
-
+app.use('/api/excel-output', excelOutputRoutes);
 module.exports = app;

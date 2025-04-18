@@ -19,7 +19,7 @@ exports.init = async () => {
             const response = await Classroom.findOne({loginId: process.env.DEFAULT_ADMIN_LOGINID});
             await Staff.create({
                 name: "Admin",
-                type: "正社員",
+                type: "Admin",
                 classroom: response._id
             })
 
