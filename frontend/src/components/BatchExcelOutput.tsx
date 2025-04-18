@@ -4,7 +4,11 @@ import RNFS from 'react-native-fs';
 import XLSX from 'xlsx';
 import Share from 'react-native-share';
 
-const BatchExcelOutput = async (regularData: [], partTimeData: [], fileName: String) => {
+const BatchExcelOutput = async (
+  regularData: [],
+  partTimeData: [],
+  fileName: string,
+) => {
   try {
     const ws = XLSX.utils.json_to_sheet(regularData);
     const wb = XLSX.utils.book_new();
@@ -14,12 +18,12 @@ const BatchExcelOutput = async (regularData: [], partTimeData: [], fileName: Str
     XLSX.utils.book_append_sheet(wb, ws1, 'パートアルバイト');
 
     const excelBase64 = XLSX.write(wb, { type: 'base64', bookType: 'xlsx' });
-
+    
     const filePath = `${RNFS.DownloadDirectoryPath}/${fileName}.xlsx`;
 
     await RNFS.writeFile(filePath, excelBase64, 'base64');
 
-    console.log('✅ First Half Excel saved at:', filePath);
+    console.log('✅ Excel saved at:', filePath);
 
   } catch (error: any) {
     Alert.alert('Error', error.message || String(error));

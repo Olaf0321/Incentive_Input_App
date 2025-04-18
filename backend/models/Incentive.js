@@ -1,7 +1,7 @@
 // models/Incentive.js
 const mongoose = require('mongoose');
 
-const staffSchema = new mongoose.Schema(
+const incentiveSchema = new mongoose.Schema(
     {
         name: { type: String, required: true },
         type: {
@@ -23,4 +23,4 @@ const staffSchema = new mongoose.Schema(
     }
 );
 
-module.exports = mongoose.model('Incentive', staffSchema);
+module.exports = mongoose.model('Incentive', incentiveSchema);
