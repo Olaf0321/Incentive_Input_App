@@ -1,6 +1,6 @@
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet, Dimensions, Alert } from "react-native";
-import FirstHalfExcelOutput from '../../components/FirstHalfExcelOutput'
+import BatchExcelOutput from '../../components/BatchExcelOutput'
 import SERVER_URL from "../../../config";
 
 const { width } = Dimensions.get("window");
@@ -28,10 +28,11 @@ const CSVExportScreen = ({ navigation }: any) => {
       });
 
       const data = await response.json();
-      if (ele.content == 'FirstHalfCSVOutputScreen') {
-        FirstHalfExcelOutput(data.regularData, data.partTimeData, data.title);
+      if (ele.title == '上期一括\nCSV出力' || ele.title == '下期一括\nCSV出力') {
+        BatchExcelOutput(data.regularData, data.partTimeData, data.title);
       }
-      Alert.alert(`${ele.content}`);
+      const realPeriod = `${String(data.title).substring(0, 7)}`
+      Alert.alert(`${realPeriod}資料が一括で出力されました。`);
     } catch (err) {
       Alert.alert(`error: ${err}`);
     }

@@ -4,7 +4,7 @@ import RNFS from 'react-native-fs';
 import XLSX from 'xlsx';
 import Share from 'react-native-share';
 
-const FirstHalfExcelOutput = async (regularData: [], partTimeData: [], fileName: String) => {
+const BatchExcelOutput = async (regularData: [], partTimeData: [], fileName: String) => {
   try {
     const ws = XLSX.utils.json_to_sheet(regularData);
     const wb = XLSX.utils.book_new();
@@ -26,4 +26,4 @@ const FirstHalfExcelOutput = async (regularData: [], partTimeData: [], fileName:
   }
 };
 
-export default FirstHalfExcelOutput;
+export default BatchExcelOutput;

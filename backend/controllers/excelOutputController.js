@@ -33,7 +33,7 @@ const getStAndEdDate = (currentYear, currentMonth, type) => {
             st = `${currentYear}-10-01`, ed = `${nextYear}-03-31`;
         }
     }
-    return {st: st, ed: ed};
+    return { st: st, ed: ed };
 }
 
 exports.getDataAndTItle = async (req, res) => {
@@ -49,57 +49,56 @@ exports.getDataAndTItle = async (req, res) => {
         console.log('staff=======', staff);
         console.log('incentive===========', incentive);
 
-        if (type == "上期一括\nCSV出力") {
-            const result = getStAndEdDate(currentYear, currentMonth, type);
-            const st = result.st, ed = result.ed;
-            console.log('period=======', st, ed);
-            const regularIncentive = incentive.filter(ele=>ele.type == '正社員用');
-            const regularStaff = staff.filter(ele=>ele.type == '正社員');
+        const result = getStAndEdDate(currentYear, currentMonth, type);
+        const st = result.st, ed = result.ed;
+        console.log('period=======', st, ed);
+
+        if (type == "上期一括\nCSV出力" || type == '下期一括\nCSV出力') {
+            const regularIncentive = incentive.filter(ele => ele.type == '正社員用');
+            const regularStaff = staff.filter(ele => ele.type == '正社員');
             console.log('regularIncentive=======', regularIncentive);
             console.log('regularStaff=======', regularStaff);
             let regularData = [];
             for (let i = 0; i < regularIncentive.length; i++) {
                 const incentiveName = regularIncentive[i].name;
-                let ele = {'No': i + 1, '社員用インセンティブ項目': incentiveName};
+                let ele = { 'No': i + 1, '社員用インセンティブ項目': incentiveName };
                 for (let j = 0; j < regularStaff.length; j++) {
-                    const incentiveList =  regularStaff[j].incentiveList;
+                    const incentiveList = regularStaff[j].incentiveList;
                     const staffName = regularStaff[j].name;
-                    const realList = incentiveList.filter(ele=>ele.time >= st && ele.time <= ed && ele.incentive.name == incentiveName);
+                    const realList = incentiveList.filter(ele => ele.time >= st && ele.time <= ed && ele.incentive.name == incentiveName);
                     let sum = 0;
                     for (let k = 0; k < realList.length; k++) sum += realList[k].grade;
-                    ele = {...ele, [staffName] : sum};
+                    ele = { ...ele, [staffName]: sum };
                 }
                 regularData.push(ele);
             }
 
-            const partTimeIncentive = incentive.filter(ele=>ele.type == 'パートアルバイト用');
-            const partTimeStaff = staff.filter(ele=>ele.type == 'パートアルバイト');
+            const partTimeIncentive = incentive.filter(ele => ele.type == 'パートアルバイト用');
+            const partTimeStaff = staff.filter(ele => ele.type == 'パートアルバイト');
 
             let partTimeData = [];
             for (let i = 0; i < partTimeIncentive.length; i++) {
                 const incentiveName = partTimeIncentive[i].name;
-                let ele = {'No': i + 1, '社員用インセンティブ項目': incentiveName};
+                let ele = { 'No': i + 1, '社員用インセンティブ項目': incentiveName };
                 for (let j = 0; j < partTimeStaff.length; j++) {
-                    const incentiveList =  partTimeStaff[j].incentiveList;
+                    const incentiveList = partTimeStaff[j].incentiveList;
                     const staffName = partTimeStaff[j].name;
-                    const realList = incentiveList.filter(ele=>ele.time >= st && ele.time <= ed && ele.incentive.name == incentiveName);
+                    const realList = incentiveList.filter(ele => ele.time >= st && ele.time <= ed && ele.incentive.name == incentiveName);
                     let sum = 0;
                     for (let k = 0; k < realList.length; k++) sum += realList[k].grade;
-                    ele = {...ele, [staffName]: sum};
+                    ele = { ...ele, [staffName]: sum };
                 }
                 partTimeData.push(ele);
             }
 
             console.log('regularData: ', regularData);
             console.log('partTimeData: ', partTimeData);
-            const title = `${st.substring(0, 4)}年上期一括出力`
+            const title = type == '上期一括\nCSV出力' ? `${st.substring(0, 4)}年上期一括出力` : `${st.substring(0, 4)}年下期一括出力`
             res.json({
                 regularData: regularData,
                 partTimeData: partTimeData,
                 title: title
             })
-        } else if (type == '下期一括\nCSV出力') {
-
         } else if (type == '上期エリア、\n事業ごと\nCSV出力') {
 
         } else if (type == '下期エリア、\n事業ごと\nCSV出力') {
