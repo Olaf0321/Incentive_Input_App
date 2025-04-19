@@ -8,7 +8,6 @@ import {
   SafeAreaView,
   Alert
 } from "react-native";
-import DropDownPicker from "react-native-dropdown-picker";
 import { Dropdown } from 'react-native-element-dropdown';
 
 import SERVER_URL from "../../../config"

@@ -9,29 +9,34 @@ import {
   Alert
 } from "react-native";
 import DropDownPicker from "react-native-dropdown-picker";
+import { Dropdown } from 'react-native-element-dropdown';
+
 import SERVER_URL from "../../../config";
 // DropDownPicker.setListMode("MODAL")
+
+interface DropdownItem {
+  label: string;
+  value: string;
+}
+
 
 const IncentiveSettingsScreen = ({ navigation }: any) => {
   const [salaryItem, setSalaryItem] = useState("");
 
-  const [openOfType, setOpenOfType] = useState(false);
-  const [valueOfType, setValueOfType] = useState(null);
+  const [valueOfType, setValueOfType] = useState('');
   const [types, setTypes] = useState([
     { label: "正社員用", value: "正社員用" },
     { label: "パートアルバイト用", value: "パートアルバイト用" },
   ]);
 
-  const [openOfPrice, setOpenOfPrice] = useState(false);
-  const [valueOfPrice, setValueOfPrice] = useState(null);
+  const [valueOfPrice, setValueOfPrice] = useState('');
   const [prices, setPrices] = useState([
     { label: "100", value: 100 },
     { label: "200", value: 200 },
     { label: "300", value: 300 },
   ]);
 
-  const [openOfRating, setOpenOfRating] = useState(false);
-  const [valueOfRating, setValueOfRating] = useState(null);
+  const [valueOfRating, setValueOfRating] = useState('');
   const [ratings, setRatings] = useState([
     { label: "100", value: 100 },
     { label: "200", value: 200 },
@@ -61,8 +66,8 @@ const IncentiveSettingsScreen = ({ navigation }: any) => {
         Alert.alert(`${data.msg}`);
         if (data.code == 1) {
           setSalaryItem("");
-          setValueOfPrice(null);
-          setValueOfRating(null);
+          setValueOfPrice("");
+          setValueOfRating("");
         }
       }
     } catch (err) {
@@ -108,44 +113,40 @@ const IncentiveSettingsScreen = ({ navigation }: any) => {
       {/* Area and Business Selection */}
       <View style={styles.inputContainerRow}>
         <Text style={styles.label}>形態</Text>
-        <View style={[styles.dropdownWrapper, openOfType && { zIndex: 2000 }]}>
-          <DropDownPicker
-            open={openOfType}
-            value={valueOfType}
-            items={types}
-            setOpen={setOpenOfType}
-            setValue={setValueOfType}
-            setItems={setTypes}
-            placeholder="単価をお選びください。"
-            style={styles.dropdown}
-          />
-        </View>
+        <Dropdown
+          style={styles.dropdown}
+          placeholderStyle={styles.placeholderStyle}
+          selectedTextStyle={styles.selectedTextStyle}
+          data={types}
+          maxHeight={300}
+          labelField='label'
+          valueField='value'
+          placeholder="地域を選択してください。"
+          value={valueOfType}
+          onChange={(item: DropdownItem) => setValueOfType(item.value)}
+        />
       </View>
 
       {/* Area and Business Selection */}
       <View style={styles.inputContainerRow}>
         <Text style={styles.label}>単価登録</Text>
-        <View style={[styles.dropdownWrapper, openOfPrice && { zIndex: 2000 }]}>
-          <DropDownPicker
-            open={openOfPrice}
-            value={valueOfPrice}
-            items={prices}
-            setOpen={setOpenOfPrice}
-            setValue={setValueOfPrice}
-            setItems={setPrices}
-            placeholder="単価をお選びください。"
-            style={styles.dropdown}
-            maxHeight={200} // This limits the dropdown height to 300, making it scrollable
-            searchable = {true}
-            searchPlaceholder="Search"
-            autoScroll={true}
-          />
-        </View>
+        <Dropdown
+          style={styles.dropdown}
+          placeholderStyle={styles.placeholderStyle}
+          selectedTextStyle={styles.selectedTextStyle}
+          data={prices}
+          maxHeight={300}
+          labelField='label'
+          valueField='value'
+          placeholder="地域を選択してください。"
+          value={valueOfPrice}
+          onChange={(item: DropdownItem) => setValueOfPrice(item.value)}
+        />
       </View>
 
       <View style={styles.inputContainerRow}>
         <Text style={styles.label}>等級登録</Text>
-        <View style={[styles.dropdownWrapper, openOfRating && { zIndex: 2000 }]}>
+        {/* <View style={[styles.dropdownWrapper, openOfRating && { zIndex: 2000 }]}>
           <DropDownPicker
             open={openOfRating}
             value={valueOfRating}
@@ -160,7 +161,20 @@ const IncentiveSettingsScreen = ({ navigation }: any) => {
             searchPlaceholder="Search"
             autoScroll={true}
           />
-        </View>
+          
+        </View> */}
+        <Dropdown
+          style={styles.dropdown}
+          placeholderStyle={styles.placeholderStyle}
+          selectedTextStyle={styles.selectedTextStyle}
+          data={ratings}
+          maxHeight={300}
+          labelField='label'
+          valueField='value'
+          placeholder="地域を選択してください。"
+          value={valueOfRating}
+          onChange={(item: DropdownItem) => setValueOfRating(item.value)}
+        />
       </View>
 
       {/* Register Button */}
@@ -227,12 +241,16 @@ const styles = StyleSheet.create({
     color: "#FFFFFF",
     fontSize: 18,
   },
-  dropdownWrapper: {
-    flex: 1,
-    zIndex: 1, // 初期値を低めにする
-  },
   dropdown: {
-    backgroundColor: "#fff",
-    borderColor: "#ccc",
-  }
+    height: 30,
+    width: '65%',
+    borderBottomColor: 'gray',
+    borderBottomWidth: 0.5,
+  },
+  placeholderStyle: {
+    fontSize: 16,
+  },
+  selectedTextStyle: {
+    fontSize: 16,
+  },
 });
