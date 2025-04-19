@@ -16,11 +16,10 @@ exports.createClassroom = async (req, res) => {
         msg: "すでに登録されている名前です。"
       })
     } else {
-      const salt = await bcrypt.genSalt(Number(process.env.SALT));
       await Classroom.create({
         name: name,
         loginId: loginId,
-        password: await bcrypt.hash(password, salt)
+        password: password
       })
       res.status(200).json({
         code: 1,

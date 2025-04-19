@@ -14,7 +14,7 @@ exports.init = async () => {
             await Classroom.create({
                 name: process.env.DEFAULT_ADMIN_CLASSROOM_NAME,
                 loginId: process.env.DEFAULT_ADMIN_LOGINID,
-                password: await bcrypt.hash(process.env.DEFAULT_ADMIN_PASSWORD, salt)
+                password: process.env.DEFAULT_ADMIN_PASSWORD
             })
             const response = await Classroom.findOne({loginId: process.env.DEFAULT_ADMIN_LOGINID});
             await Staff.create({

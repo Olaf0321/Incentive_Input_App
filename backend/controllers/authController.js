@@ -19,8 +19,6 @@ exports.login = async (req, res) => {
         return
     }
 
-    const salt = await bcrypt.genSalt(10);
-
     const response = await Classroom.findById(staff.classroom);
 
     if (response.loginId != loginId) {
@@ -30,7 +28,7 @@ exports.login = async (req, res) => {
         })
         return
     }
-    const isMatch = await bcrypt.compare(password, response.password);
+    const isMatch = password == response.password;
 
     if (!isMatch) {
         res.status(201).json({
