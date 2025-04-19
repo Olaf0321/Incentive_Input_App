@@ -14,7 +14,7 @@ const EmployeeListScreen = ({ navigation }: any) => {
     ]);
 
     const [incentives, setIncentives] = useState([
-        { name: "セクリハ提出", type: "正社員用" },
+        { name: "セクリハ提出", type: "正社員用", unit_price: '', upper_limit: '', id: '' },
     ]);
 
     const [classroom, setClassroom] = useState([{ name: "セクリハ提出", loginId: 1, password: "" },]);
@@ -66,12 +66,18 @@ const EmployeeListScreen = ({ navigation }: any) => {
                 if (incentivesData[i].type == '正社員') {
                     regularArr.push({
                         name: incentivesData[i].name,
-                        type: incentivesData[i].type
+                        type: incentivesData[i].type,
+                        unit_price: incentivesData[i].unit_price,
+                        upper_limit: incentivesData[i].upper_limit,
+                        id: incentivesData[i]._id
                     });
                 } else {
                     partTimeArr.push({
                         name: incentivesData[i].name,
                         type: incentivesData[i].type,
+                        unit_price: incentivesData[i].unit_price,
+                        upper_limit: incentivesData[i].upper_limit,
+                        id: incentivesData[i]._id
                     });
                 }
             }
@@ -178,8 +184,8 @@ const EmployeeListScreen = ({ navigation }: any) => {
                     <TouchableOpacity
                         key={index}
                         onPress={() =>
-                            navigation.navigate('従業員詳細', {
-                                employee: item,
+                            navigation.navigate('インセンティブ詳細', {
+                                curIncentive: item,
                             })
                         }
                         style={styles.tableRow}

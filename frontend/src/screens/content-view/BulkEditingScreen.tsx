@@ -97,7 +97,7 @@ const BulkEditingScreen = ({ navigation }: any) => {
                     <TouchableOpacity
                         key={index}
                         onPress={() =>
-                            navigation.navigate('従業員詳細', {
+                            navigation.navigate('一括編集詳細', {
                                 employee: emp,
                             })
                         }

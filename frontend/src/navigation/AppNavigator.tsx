@@ -20,6 +20,7 @@ import EmployeeDetailScreen from '../screens/content-view/EmployeeDetailScreen';
 import BulkEditingScreen from '../screens/content-view/BulkEditingScreen';
 import ActivityScreen from '../screens/staff-incentive-input/ActivityScreen';
 import BulkEditingDetailScreen from '../screens/content-view/BulkEditingDetailScreen';
+import IncentiveDetailScreeen from '../screens//content-view/IncentiveDetailScreen'
 
 const Stack = createStackNavigator();
 
@@ -39,6 +40,7 @@ const AppNavigator = () => {
         <Stack.Screen name="全体的なレビュー" component={OverallReviewScreen} />
         <Stack.Screen name="教室レビュー" component={ClassroomReviewScreen} />
         <Stack.Screen name="従業員詳細" component={EmployeeDetailScreen} />
+        <Stack.Screen name="インセンティブ詳細" component={IncentiveDetailScreeen} />
         <Stack.Screen name="一括編集" component={BulkEditingScreen} />
         <Stack.Screen name="一括編集詳細" component={BulkEditingDetailScreen} />
         <Stack.Screen name="CSVエクスポート" component={CSVExportScreen} />

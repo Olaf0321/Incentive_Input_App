@@ -26,7 +26,7 @@ interface DropdownItem {
   value: string;
 }
 
-const BulkEditingDetailScreen: React.FC<RouteProps> = ({ route }) => {
+const BulkEditingDetailScreen  = ({ route }: any) => {
   const { employee } = route.params;
   const [incentives, setIncentives] = useState<Incentive[]>([
     { name: "", type: "", unit_price: 0, upper_limit: 0 }
