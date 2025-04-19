@@ -73,12 +73,18 @@ const getNextYear = (currentYear) => {
   return stringOfNextYear;
 }
 
+const changeMonth = (month) => {
+  return month.length == 1 ? `0${month}` : month
+}
+
 //Read incentive list by period
 exports.getIncentivesListByPeriod = async (req, res) => {
   try {
     const data = req.body;
     console.log('data', data);
-    const { name, currentYear, currentMonth, status } = data;
+    const { name, currentYear, oldMonth, status } = data;
+
+    const currentMonth = changeMonth(oldMonth);
 
     const staff = await Staff.findOne({ name: name })
       .populate('classroom')
@@ -117,6 +123,54 @@ exports.getIncentivesListByPeriod = async (req, res) => {
   }
 }
 
+exports.deleteIncentive = async (req, res) => {
+  console.log('##########');
+  try {
+    const data = req.body;
+    console.log('data', data);
+    const { currentYear, oldMonth, status } = data;
+    const currentMonth = changeMonth(oldMonth);
+
+
+    const allStaff = await Staff.find()
+      .populate('classroom')
+      .populate('incentiveList.incentive');
+
+    let st = '', ed = '';
+
+    if (status == '上期入力') {
+      if (currentMonth < '04') {
+        const lastYear = getLastYear(currentYear);
+        st = `${lastYear}-04-01`, ed = `${lastYear}-09-30`;
+      } else {
+        st = `${currentYear}-04-01`, ed = `${currentYear}-09-30`;
+      }
+    } else {
+      if (currentMonth < '10') {
+        const lastYear = getLastYear(currentYear);
+        st = `${lastYear}-10-01`, ed = `${currentYear}-03-31`;
+      } else {
+        const nextYear = getNextYear(currentYear);
+        st = `${currentYear}-10-01`, ed = `${nextYear}-03-31`;
+      }
+    }
+
+    console.log('st=======', st);
+    console.log('ed=======', ed);
+    console.log('allStaff', allStaff);
+
+    for (let i = 0; i < allStaff.length; i++) {
+      const ele = allStaff[i];
+      if (ele.name == process.env.DEFAULT_ADMIN_NAME) continue;
+      ele.incentiveList = ele.incentiveList.filter(ind => ind.time < st || ind.time > ed);
+      await ele.save();
+    }
+    res.status(200).json({code: 1});
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+}
+
 const getFebruaryDates = (stringOfYear) => {
   const numberOfYear = Number(stringOfYear);
   const month = 1; // February (0 = Jan, 1 = Feb, etc.)
@@ -139,10 +193,6 @@ const dates = {
   '10': '31',
   '11': '30',
   '12': '31',
-}
-
-const changeMonth = (month) => {
-  return month.length == 1 ? `0${month}`: month
 }
 
 //Read incentive list by month
@@ -216,16 +266,16 @@ exports.changeIncentivesList = async (req, res) => {
     console.log('result-incentiveList', result);
 
     let realAmount = 0;
-  
+
     for (let i = 0; i < result.length; i++) {
       let ele = result[i];
       console.log('grade', ele.grade);
       realAmount += Number(ele.grade);
     }
-    
+
     console.log('real-amount', realAmount);
 
-    const rlt = await Incentive.findOne({name: incentiveName});
+    const rlt = await Incentive.findOne({ name: incentiveName });
 
     console.log('rlt', rlt);
 
@@ -292,6 +342,7 @@ exports.changeIncentivesList = async (req, res) => {
   }
 }
 
+
 // READ all staff
 exports.getAllStaff = async (req, res) => {
   try {
@@ -339,11 +390,11 @@ exports.getStaffByName = async (req, res) => {
 exports.updateStaff = async (req, res) => {
   try {
     const id = req.params.id;
-    const {name, classroomName, type} = req.body;
+    const { name, classroomName, type } = req.body;
 
     const originStaff = await Staff.findById(id);
-    const newStaff = await Staff.findOne({name: name});
-    const classroom = await Classroom.findOne({name: classroomName});
+    const newStaff = await Staff.findOne({ name: name });
+    const classroom = await Classroom.findOne({ name: classroomName });
 
     const newObj = {
       name: name,
@@ -352,7 +403,7 @@ exports.updateStaff = async (req, res) => {
     }
 
     if (newStaff != null && newStaff.name != originStaff.name) {
-      res.json({code: 0});
+      res.json({ code: 0 });
     } else {
       const updatedStaff = await Staff.findByIdAndUpdate(req.params.id, newObj, {
         new: true,
@@ -360,7 +411,7 @@ exports.updateStaff = async (req, res) => {
       });
       console.log('updatedStaff', updatedStaff);
       if (!updatedStaff) return res.status(404).json({ message: 'Staff not found' });
-      res.json({code: 1, updatedStaff: updatedStaff});
+      res.json({ code: 1, updatedStaff: updatedStaff });
     }
   } catch (err) {
     res.status(400).json({ error: err.message });
