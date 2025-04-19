@@ -17,7 +17,9 @@ const EmployeeListScreen = ({ navigation }: any) => {
         { name: "セクリハ提出", type: "正社員用", unit_price: '', upper_limit: '', id: '' },
     ]);
 
-    const [classroom, setClassroom] = useState([{ name: "セクリハ提出", loginId: 1, password: "" },]);
+    const [classroom, setClassroom] = useState([
+        { name: "セクリハ提出", loginId: '', password: "", id: '' }
+    ]);
     const isFocused = useIsFocused();
 
     const init = async () => {
@@ -91,7 +93,20 @@ const EmployeeListScreen = ({ navigation }: any) => {
                 }
             });
             const classroomData = await classroomRes.json();
-            setClassroom(classroomData.filter((ele: any) => ele.name !== 'AdminClassroom'));
+            let arr = [];
+            for (let i = 0; i < classroomData.length; i++) {
+                const ele = classroomData[i];
+                console.log('ele', ele);
+                if (ele.name == 'AdminClassroom') continue;
+                arr.push({
+                    name: ele.name,
+                    loginId: ele.loginId,
+                    password: ele.password,
+                    id : ele._id
+                });
+            }
+            console.log('arr', arr);
+            setClassroom([...arr]);
         } catch (err) {
             Alert.alert(`error: ${err}`);
         }
@@ -216,8 +231,8 @@ const EmployeeListScreen = ({ navigation }: any) => {
                     <TouchableOpacity
                         key={index}
                         onPress={() =>
-                            navigation.navigate('従業員詳細', {
-                                employee: item,
+                            navigation.navigate('教室の詳細', {
+                                curClassroom: item,
                             })
                         }
                         style={styles.tableRow}
@@ -226,9 +241,9 @@ const EmployeeListScreen = ({ navigation }: any) => {
                         <Text style={styles.tableCell}>{item.name}</Text>
                     </TouchableOpacity>
                 ))}
-                {incentives.length == 0 &&
+                {classroom.length == 0 &&
                     <View style={styles.tableRow}>
-                        <Text style={styles.tablenone}>登録されたインセンティブはありません。</Text>
+                        <Text style={styles.tablenone}>登録された教室はありません。</Text>
                     </View>
                 }
             </View>
