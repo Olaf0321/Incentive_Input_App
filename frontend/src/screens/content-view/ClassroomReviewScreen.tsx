@@ -1,120 +1,236 @@
+// import React, { useEffect, useState } from "react";
+// import { View, Text, ScrollView, StyleSheet, Alert, TouchableOpacity } from "react-native";
+// import SERVER_URL from "../../../config";
+
+// const EmployeeListScreen = ({ navigation }: any) => {
+//     const [allStaff, setAllStaff] = useState([]);
+//     const [allClassroom, setAllClassroom] = useState([]);
+//     const [eachStaff, setEachStaff] = useState({});
+
+//     const init = async () => {
+//         try {
+//             const allStaff = await fetch(`${SERVER_URL}api/staff/`, {
+//                 method: 'GET',
+//                 headers: {
+//                     "Content-Type": "application/json"
+//                 }
+//             });
+//             const allStaffData = await allStaff.json();
+//             setAllStaff(allStaffData);
+
+//             const allClassroom = await fetch(`${SERVER_URL}api/classrooms/`, {
+//                 method: 'GET',
+//                 headers: {
+//                     "Content-Type": "application/json"
+//                 }
+//             });
+//             const allClassroomData = await allClassroom.json();
+//             setAllClassroom(allClassroomData);
+
+//             let each = {};
+//             for (let i = 0; i < allClassroomData.length; i++) {
+//                 const eachClassroomName = allClassroomData[i].name;
+//                 const arr = allStaffData.filter(ele=>ele.classrooms.name == eachClassroomName);
+//                 each = {...each, [eachClassroomName]: arr};
+//             }
+
+//             setEachStaff(each);
+
+//         } catch (err) {
+//             Alert.alert(`error: ${err}`);
+//         }
+//     }
+
+//     useEffect(() => {
+//         init();
+//     })
+
+//     return (
+//         <ScrollView style={styles.container}>
+//             {/* Header */}
+//             <Text style={styles.headerText}>内容閲覧・全体・各教室・編集・CSV出力</Text>
+//             <Text style={styles.subtitle}>各教室</Text>
+
+//             {
+//                 allClassroom.map((ele, idx) => {
+//                     <Text style={styles.sectionTitle} key={idx}>{ele.name}</Text>
+//                     <View style={styles.table}>
+//                         <View style={styles.tableRowHeader}>
+//                             <Text style={styles.tableHeader}>No</Text>
+//                             <Text style={styles.tableHeader}>氏名</Text>
+//                             <Text style={styles.tableHeader}>職別</Text>
+//                         </View>
+//                         {eachStaff[ele.name].length > 0 && eachStaff[ele.name].map((emp, index) => (
+//                             <TouchableOpacity
+//                                 key={index}
+//                                 onPress={() =>
+//                                     navigation.navigate('従業員詳細', {
+//                                         employee: emp,
+//                                     })
+//                                 }
+//                                 style={styles.tableRow}
+//                             >
+//                                 <Text style={styles.tableCell}>{index+1}</Text>
+//                                 <Text style={styles.tableCell}>{emp.name}</Text>
+//                                 <Text style={styles.tableCell}>{emp.type}</Text>
+//                             </TouchableOpacity>
+//                         ))}
+//                     </View>
+//                 })
+//             }
+//         </ScrollView>
+//     );
+// };
+
+// export default EmployeeListScreen;
+
+// const styles = StyleSheet.create({
+//     container: {
+//         flex: 1,
+//         backgroundColor: "#FFFFFF",
+//         paddingHorizontal: 15,
+//         paddingVertical: 20,
+//     },
+//     headerText: {
+//         fontSize: 22,
+//         fontWeight: "bold",
+//         textAlign: "center",
+//         marginBottom: 15,
+//     },
+//     subtitle: {
+//         fontSize: 18,
+//         color: "#555",
+//         textAlign: "center",
+//         marginBottom: 20,
+//     },
+//     sectionTitle: {
+//         fontSize: 18,
+//         fontWeight: "bold",
+//         marginTop: 20,
+//         marginBottom: 10,
+//     },
+//     table: {
+//         borderWidth: 1,
+//         borderColor: "#000",
+//         marginBottom: 50,
+//     },
+//     tableRowHeader: {
+//         flexDirection: "row",
+//         backgroundColor: "#2B5DAE",
+//         paddingVertical: 8,
+//     },
+//     tableHeader: {
+//         flex: 1,
+//         color: "#FFFFFF",
+//         fontWeight: "bold",
+//         textAlign: "center",
+//     },
+//     tableRow: {
+//         flexDirection: "row",
+//         borderBottomWidth: 1,
+//         borderBottomColor: "#000",
+//         paddingVertical: 5,
+//     },
+//     tableCell: {
+//         flex: 1,
+//         textAlign: "center",
+//     },
+//     tablenone: {
+//         flex: 1,
+//         textAlign: "left",
+//         marginLeft: 30
+//     }
+// });
 import React, { useEffect, useState } from "react";
 import { View, Text, ScrollView, StyleSheet, Alert, TouchableOpacity } from "react-native";
 import SERVER_URL from "../../../config";
 
 const EmployeeListScreen = ({ navigation }: any) => {
-    // Sample Data (Assuming received from backend)
-    const [regularEmployees, setRegularEmployees] = useState([
-        { name: "宮本 和弘", role: "正社員", area: "A教室" }
-    ]);
-
-    const [partTimeEmployees, setPartTimeEmployees] = useState([
-        { name: "A", role: "パート・アルバイト", area: "A教室" }
-    ]);
+    const [allStaff, setAllStaff] = useState<any[]>([]);
+    const [allClassroom, setAllClassroom] = useState<any[]>([]);
+    const [eachStaff, setEachStaff] = useState<{ [key: string]: any[] }>({});
+    const [numberOfClassroom, setNumberOfClassroom] = useState(0);
 
     const init = async () => {
         try {
-            let regularArr = [], partTimeArr = [];
-            const allStaff = await fetch(`${SERVER_URL}api/staff/`, {
+            const staffRes = await fetch(`${SERVER_URL}api/staff/`, {
                 method: 'GET',
                 headers: {
                     "Content-Type": "application/json"
                 }
             });
-            const employeesData = await allStaff.json();
+            const staffData = await staffRes.json();
+            setAllStaff(staffData);
 
-            for (let i = 0; i < employeesData.length; i++) {
-                if (employeesData[i].type == '正社員') {
-                    regularArr.push({
-                        name: employeesData[i].name,
-                        role: employeesData[i].type,
-                        area: employeesData[i].classroom.name
-                    });
-                } else {
-                    partTimeArr.push({
-                        name: employeesData[i].name,
-                        role: employeesData[i].type,
-                        area: employeesData[i].classroom.name
-                    });
+            const classroomRes = await fetch(`${SERVER_URL}api/classrooms/`, {
+                method: 'GET',
+                headers: {
+                    "Content-Type": "application/json"
                 }
+            });
+            const classroomData = await classroomRes.json();
+            setAllClassroom(classroomData.filter((ele:any)=>ele.name !== 'AdminClassroom'));
+            setNumberOfClassroom(classroomData.length - 1);
+
+            let grouped: { [key: string]: any[] } = {};
+            for (let i = 0; i < classroomData.length; i++) {
+                const classroomName = classroomData[i].name;
+                const filteredStaff = staffData.filter((staff: any) => {
+                        return staff.classroom?.name === classroomName;
+                });
+                grouped[classroomName] = filteredStaff;
             }
 
-            setRegularEmployees([...regularArr]);
-            setPartTimeEmployees([...partTimeArr]);
-        } catch (err) {
-            Alert.alert(`error: ${err}`);
+            setEachStaff(grouped);
+
+        } catch (err: any) {
+            Alert.alert("エラー", `${err.message || err}`);
         }
-    }
+    };
 
     useEffect(() => {
         init();
-    })
+    }, []); // <-- Add empty dependency array to prevent infinite loop
 
     return (
         <ScrollView style={styles.container}>
-            {/* Header */}
             <Text style={styles.headerText}>内容閲覧・全体・各教室・編集・CSV出力</Text>
             <Text style={styles.subtitle}>各教室</Text>
 
-            {/* Regular Employees Table */}
-            <Text style={styles.sectionTitle}>正社員</Text>
-            <View style={styles.table}>
-                <View style={styles.tableRowHeader}>
-                    <Text style={styles.tableHeader}>氏名</Text>
-                    <Text style={styles.tableHeader}>職別</Text>
-                    <Text style={styles.tableHeader}>エリア及び事業</Text>
-                </View>
-                {regularEmployees.length > 0 && regularEmployees.map((emp, index) => (
-                    <TouchableOpacity
-                        key={index}
-                        onPress={() =>
-                            navigation.navigate('従業員詳細', {
-                                employee: emp,
-                            })
-                        }
-                        style={styles.tableRow}
-                    >
-                        <Text style={styles.tableCell}>{emp.name}</Text>
-                        <Text style={styles.tableCell}>{emp.role}</Text>
-                        <Text style={styles.tableCell}>{emp.area}</Text>
-                    </TouchableOpacity>
-                ))}
-                {regularEmployees.length == 0 &&
-                    <View style={styles.tableRow}>
-                        <Text style={styles.tablenone}>登録されたスタッフはありません。</Text>
-                    </View>
-                }
-            </View>
+            <Text style={styles.addtitle}>登録された教室数： {numberOfClassroom}</Text>
 
-            {/* Part-Time Employees Table */}
-            <Text style={styles.sectionTitle}>パート・アルバイト</Text>
-            <View style={styles.table}>
-                <View style={styles.tableRowHeader}>
-                    <Text style={styles.tableHeader}>氏名</Text>
-                    <Text style={styles.tableHeader}>職別</Text>
-                    <Text style={styles.tableHeader}>エリア及び事業</Text>
-                </View>
-                {partTimeEmployees.length > 0 && partTimeEmployees.map((emp, index) => (
-                    <TouchableOpacity
-                        key={index}
-                        onPress={() =>
-                            navigation.navigate('従業員詳細', {
-                                employee: emp,
-                            })
-                        }
-                        style={styles.tableRow}
-                    >
-                        <Text style={styles.tableCell}>{emp.name}</Text>
-                        <Text style={styles.tableCell}>{emp.role}</Text>
-                        <Text style={styles.tableCell}>{emp.area}</Text>
-                    </TouchableOpacity>
-                ))}
-                {partTimeEmployees.length == 0 &&
-                    <View style={styles.tableRow}>
-                        <Text style={styles.tablenone}>登録されたスタッフはありません。</Text>
+            {allClassroom.map((ele, idx) => (
+                <View key={idx}>
+                    <Text style={styles.sectionTitle}>{ele.name}</Text>
+                    <View style={styles.table}>
+                        <View style={styles.tableRowHeader}>
+                            <Text style={styles.tableHeader}>番号</Text>
+                            <Text style={styles.tableHeader}>氏名</Text>
+                            <Text style={styles.tableHeader}>職別</Text>
+                        </View>
+
+                        {eachStaff[ele.name]?.length > 0 ? (
+                            eachStaff[ele.name].map((emp, index) => (
+                                <TouchableOpacity
+                                    key={index}
+                                    onPress={() =>
+                                        navigation.navigate('従業員詳細', {
+                                            employee: emp,
+                                        })
+                                    }
+                                    style={styles.tableRow}
+                                >
+                                    <Text style={styles.tableCell}>{index + 1}</Text>
+                                    <Text style={styles.tableCell}>{emp.name}</Text>
+                                    <Text style={styles.tableCell}>{emp.type}</Text>
+                                </TouchableOpacity>
+                            ))
+                        ) : (
+                            <Text style={styles.tablenone}>該当者がいません。</Text>
+                        )}
                     </View>
-                }
-            </View> 
+                </View>
+            ))}
         </ScrollView>
     );
 };
@@ -139,6 +255,12 @@ const styles = StyleSheet.create({
         color: "#555",
         textAlign: "center",
         marginBottom: 20,
+    },
+    addtitle: {
+        fontSize: 18,
+        fontWeight: "bold",
+        textAlign: "center",
+        marginBottom: 10,
     },
     sectionTitle: {
         fontSize: 18,
@@ -175,6 +297,7 @@ const styles = StyleSheet.create({
     tablenone: {
         flex: 1,
         textAlign: "left",
-        marginLeft: 30
+        marginLeft: 30,
+        paddingVertical: 10,
     }
 });

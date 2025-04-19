@@ -32,8 +32,8 @@ const BulkEditingDetailScreen: React.FC<RouteProps> = ({ route }) => {
     { name: "", type: "", unit_price: 0, upper_limit: 0 }
   ]);
 
-  const [staticYears, setStaticYears] = useState<DropdownItem[]>([{ label: '2020', value: '2020' }]);
-  const [selectedYear, setSelectedYear] = useState<string>('2021');
+  const [staticYears, setStaticYears] = useState<DropdownItem[]>([{ label: '2025', value: '2025' }]);
+  const [selectedYear, setSelectedYear] = useState<string>('2025');
 
   const [staticMonths, setStaticMonths] = useState<DropdownItem[]>([{ label: '1', value: '1' }]);
   const [selectedMonth, setSelectedMonth] = useState<string>('1');
@@ -94,8 +94,8 @@ const BulkEditingDetailScreen: React.FC<RouteProps> = ({ route }) => {
       
 
       const years: DropdownItem[] = [];
-      let year = 2021;
-      for (let i = 0; i < 30; i++) {
+      let year = 2025;
+      for (let i = 0; i < 26; i++) {
         years.push({ label: year.toString(), value: year.toString() });
         year++;
       }

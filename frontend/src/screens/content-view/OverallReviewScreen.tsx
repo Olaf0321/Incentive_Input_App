@@ -1,8 +1,8 @@
-import React, {useEffect, useState} from "react";
-import { View, Text, ScrollView, StyleSheet, Alert } from "react-native";
+import React, { useEffect, useState } from "react";
+import { View, Text, ScrollView, StyleSheet, Alert, TouchableOpacity } from "react-native";
 import SERVER_URL from "../../../config";
 
-const EmployeeListScreen = () => {
+const EmployeeListScreen = ({ navigation }: any) => {
     // Sample Data (Assuming received from backend)
     const [regularEmployees, setRegularEmployees] = useState([
         { name: "宮本 和弘", role: "正社員", area: "A教室" },
@@ -13,8 +13,10 @@ const EmployeeListScreen = () => {
     ]);
 
     const [incentives, setIncentives] = useState([
-        {name: "セクリハ提出", type: "正社員用"},
+        { name: "セクリハ提出", type: "正社員用" },
     ]);
+
+    const [classroom, setClassroom] = useState([{ name: "セクリハ提出", loginId: 1, password: "" },]);
 
     const init = async () => {
         try {
@@ -26,8 +28,6 @@ const EmployeeListScreen = () => {
                 }
             });
             const employeesData = await allStaff.json();
-
-            
 
             for (let i = 0; i < employeesData.length; i++) {
                 if (employeesData[i].type == '正社員') {
@@ -47,7 +47,7 @@ const EmployeeListScreen = () => {
 
             setRegularEmployees([...regularArr]);
             setPartTimeEmployees([...partTimeArr]);
-            
+
             regularArr = [], partTimeArr = [];
 
             const allIncentives = await fetch(`${SERVER_URL}api/incentive/`, {
@@ -73,12 +73,21 @@ const EmployeeListScreen = () => {
             }
 
             setIncentives([...regularArr, ...partTimeArr]);
+
+            const classroomRes = await fetch(`${SERVER_URL}api/classrooms/`, {
+                method: 'GET',
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            });
+            const classroomData = await classroomRes.json();
+            setClassroom(classroomData.filter((ele: any) => ele.name !== 'AdminClassroom'));
         } catch (err) {
             Alert.alert(`error: ${err}`);
         }
     }
 
-    useEffect(()=> {
+    useEffect(() => {
         init();
     }, [])
 
@@ -97,11 +106,19 @@ const EmployeeListScreen = () => {
                     <Text style={styles.tableHeader}>エリア及び事業</Text>
                 </View>
                 {regularEmployees.length > 0 && regularEmployees.map((emp, index) => (
-                    <View key={index} style={styles.tableRow}>
+                    <TouchableOpacity
+                        key={index}
+                        onPress={() =>
+                            navigation.navigate('従業員詳細', {
+                                employee: emp,
+                            })
+                        }
+                        style={styles.tableRow}
+                    >
                         <Text style={styles.tableCell}>{emp.name}</Text>
                         <Text style={styles.tableCell}>{emp.role}</Text>
                         <Text style={styles.tableCell}>{emp.area}</Text>
-                    </View>
+                    </TouchableOpacity>
                 ))}
                 {regularEmployees.length == 0 &&
                     <View style={styles.tableRow}>
@@ -118,13 +135,21 @@ const EmployeeListScreen = () => {
                     <Text style={styles.tableHeader}>職別</Text>
                     <Text style={styles.tableHeader}>エリア及び事業</Text>
                 </View>
-                
+
                 {partTimeEmployees.length > 0 && partTimeEmployees.map((emp, index) => (
-                    <View key={index} style={styles.tableRow}>
+                    <TouchableOpacity
+                        key={index}
+                        onPress={() =>
+                            navigation.navigate('従業員詳細', {
+                                employee: emp,
+                            })
+                        }
+                        style={styles.tableRow}
+                    >
                         <Text style={styles.tableCell}>{emp.name}</Text>
                         <Text style={styles.tableCell}>{emp.role}</Text>
                         <Text style={styles.tableCell}>{emp.area}</Text>
-                    </View>
+                    </TouchableOpacity>
                 ))}
                 {partTimeEmployees.length == 0 &&
                     <View style={styles.tableRow}>
@@ -144,10 +169,50 @@ const EmployeeListScreen = () => {
 
                 {/* Incentive List */}
                 {incentives.length > 0 && incentives.map((item, index) => (
-                    <View key={index} style={styles.tableRow}>
+                    <TouchableOpacity
+                        key={index}
+                        onPress={() =>
+                            navigation.navigate('従業員詳細', {
+                                employee: item,
+                            })
+                        }
+                        style={styles.tableRow}
+                    >
                         <Text style={styles.tableCell}>{item.name}</Text>
                         <Text style={styles.tableCell}>{item.type}</Text>
+                    </TouchableOpacity>
+                ))}
+                {incentives.length == 0 &&
+                    <View style={styles.tableRow}>
+                        <Text style={styles.tablenone}>登録されたインセンティブはありません。</Text>
                     </View>
+                }
+            </View>
+
+            {/* Classroom Table */}
+            <Text style={styles.sectionTitle}>教室一覧</Text>
+            <View style={styles.table}>
+                {/* Header */}
+                <View style={styles.tableRowHeader}>
+                    <Text style={styles.tableHeader}>番号</Text>
+                    <Text style={styles.tableHeader}>教室</Text>
+                </View>
+
+                {/* Incentive List */}
+                {classroom.length > 0 && classroom.map((item, index) => (
+
+                    <TouchableOpacity
+                        key={index}
+                        onPress={() =>
+                            navigation.navigate('従業員詳細', {
+                                employee: item,
+                            })
+                        }
+                        style={styles.tableRow}
+                    >
+                        <Text style={styles.tableCell}>{index + 1}</Text>
+                        <Text style={styles.tableCell}>{item.name}</Text>
+                    </TouchableOpacity>
                 ))}
                 {incentives.length == 0 &&
                     <View style={styles.tableRow}>
