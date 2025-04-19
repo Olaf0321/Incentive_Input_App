@@ -22,9 +22,8 @@ const StaffRegistrationScreen = ({ navigation }: any) => {
 
   const [valueOfClass, setValueOfClass] = useState("");
   const [classId, setClassId] = useState([
-    { label: "A教室", value: "option1" },
-    { label: "B教室", value: "option2" },
-    { label: "C教室", value: "option3" },
+    { label: "", value: "" },
+    { label: "", value: "" },
   ]);
 
   const [valueOfJob, setValueOfJob] = useState("");
