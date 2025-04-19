@@ -1,6 +1,7 @@
 // controllers/staffController.js
 const Staff = require('../models/Staff');
 const Incentive = require('../models/Incentive');
+const Classroom = require('../models/Classroom');
 
 // CREATE a new staff
 exports.createStaff = async (req, res) => {
@@ -337,12 +338,30 @@ exports.getStaffByName = async (req, res) => {
 // UPDATE staff
 exports.updateStaff = async (req, res) => {
   try {
-    const updatedStaff = await Staff.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-      runValidators: true
-    });
-    if (!updatedStaff) return res.status(404).json({ message: 'Staff not found' });
-    res.json(updatedStaff);
+    const id = req.params.id;
+    const {name, classroomName, type} = req.body;
+
+    const originStaff = await Staff.findById(id);
+    const newStaff = await Staff.findOne({name: name});
+    const classroom = await Classroom.findOne({name: classroomName});
+
+    const newObj = {
+      name: name,
+      type: type,
+      classroom: classroom._id
+    }
+
+    if (newStaff != null && newStaff.name != originStaff.name) {
+      res.json({code: 0});
+    } else {
+      const updatedStaff = await Staff.findByIdAndUpdate(req.params.id, newObj, {
+        new: true,
+        runValidators: true
+      });
+      console.log('updatedStaff', updatedStaff);
+      if (!updatedStaff) return res.status(404).json({ message: 'Staff not found' });
+      res.json({code: 1, updatedStaff: updatedStaff});
+    }
   } catch (err) {
     res.status(400).json({ error: err.message });
   }

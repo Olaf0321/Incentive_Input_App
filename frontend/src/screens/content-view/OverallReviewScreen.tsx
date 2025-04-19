@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, ScrollView, StyleSheet, Alert, TouchableOpacity } from "react-native";
 import SERVER_URL from "../../../config";
+import { useIsFocused } from '@react-navigation/native';
 
 const EmployeeListScreen = ({ navigation }: any) => {
     // Sample Data (Assuming received from backend)
@@ -17,6 +18,7 @@ const EmployeeListScreen = ({ navigation }: any) => {
     ]);
 
     const [classroom, setClassroom] = useState([{ name: "セクリハ提出", loginId: 1, password: "" },]);
+    const isFocused = useIsFocused();
 
     const init = async () => {
         try {
@@ -34,13 +36,15 @@ const EmployeeListScreen = ({ navigation }: any) => {
                     regularArr.push({
                         name: employeesData[i].name,
                         role: employeesData[i].type,
-                        area: employeesData[i].classroom.name
+                        area: employeesData[i].classroom.name,
+                        id: employeesData[i]._id
                     });
                 } else {
                     partTimeArr.push({
                         name: employeesData[i].name,
                         role: employeesData[i].type,
-                        area: employeesData[i].classroom.name
+                        area: employeesData[i].classroom.name,
+                        id: employeesData[i]._id
                     });
                 }
             }
@@ -88,8 +92,10 @@ const EmployeeListScreen = ({ navigation }: any) => {
     }
 
     useEffect(() => {
-        init();
-    }, [])
+        if (isFocused) {
+            init();
+        }
+    }, [isFocused])
 
     return (
         <ScrollView style={styles.container}>

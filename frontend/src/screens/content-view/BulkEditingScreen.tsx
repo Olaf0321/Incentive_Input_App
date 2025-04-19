@@ -28,13 +28,15 @@ const BulkEditingScreen = ({ navigation }: any) => {
                     regularArr.push({
                         name: employeesData[i].name,
                         role: employeesData[i].type,
-                        area: employeesData[i].classroom.name
+                        area: employeesData[i].classroom.name,
+                        id: employeesData[i]._id
                     });
                 } else {
                     partTimeArr.push({
                         name: employeesData[i].name,
                         role: employeesData[i].type,
-                        area: employeesData[i].classroom.name
+                        area: employeesData[i].classroom.name,
+                        id: employeesData[i]._id
                     });
                 }
             }
