@@ -3,7 +3,7 @@ import { View, StyleSheet, TouchableOpacity, Text, Alert } from 'react-native';
 import RNFS from 'react-native-fs';
 import XLSX from 'xlsx';
 
-const AreaExcelOutput = async (
+const AreaAndStaffExcelOutput = async (
   totalData: []
 ) => {
   try {
@@ -12,7 +12,7 @@ const AreaExcelOutput = async (
       const ws = XLSX.utils.json_to_sheet(data);
       const wb = XLSX.utils.book_new();
   
-      XLSX.utils.book_append_sheet(wb, ws, 'エリア');
+      XLSX.utils.book_append_sheet(wb, ws, 'シート');
   
       const excelBase64 = XLSX.write(wb, { type: 'base64', bookType: 'xlsx' });
   
@@ -28,4 +28,4 @@ const AreaExcelOutput = async (
   }
 };
 
-export default AreaExcelOutput;
+export default AreaAndStaffExcelOutput;

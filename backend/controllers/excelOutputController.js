@@ -155,16 +155,48 @@ exports.getDataAndTItle = async (req, res) => {
             res.json({
                 totalData: result
             });
-        } else if (type == '上期個別\nCSV出力') {
+        } else {
+            let result = [];
+            for (let i = 0; i < staff.length; i++) {
+                let totalData = [];
+                let totalPrice = 0;
+                const staffName = staff[i].name;
+                if (staffName == 'Admin') continue;
+                console.log('staffName', staffName);
+                const incentiveList = staff[i].incentiveList;
+                
+                const totalIncentive = staff[i].type == '正社員' ? regularIncentive : partTimeIncentive;
 
-        } else if (type == '下期個別\nCSV出力') {
+                console.log('incentiveList', incentiveList);
 
+                for (let j = 0; j < totalIncentive.length; j++) {
+                    const eachIncentive = totalIncentive[j];
+                    let ele = { 'No': j + 1, '給与項目': eachIncentive.name, '単価': eachIncentive.unit_price };
+                    let sum = 0;
+                    const realList = incentiveList.filter(ele=>ele.time >= st && ele.time <= ed && ele.incentive.name == eachIncentive.name);
+                    console.log('realList', realList);
+                    for (let k = 0; k < realList.length; k++) sum += realList[k].grade;
+                    ele = { ...ele, '合計': `${sum} / ${eachIncentive.upper_limit}` };
+                    const value = eachIncentive.upper_limit < sum ? eachIncentive.upper_limit : sum;
+                    const curPrice = eachIncentive.unit_price * value;
+                    ele = { ...ele, '金額': curPrice };
+                    totalPrice += curPrice;
+                    totalData.push(ele);
+                }
+
+                totalData.push({'No': '合計', '給与項目': '', '単価': '', '合計': '', '金額': totalPrice });
+                // const title = type == '上期エリア、\n事業ごと\nCSV出力' ? `${st.substring(0, 4)}年上期エリアごと出力(${classroomName})` : `${st.substring(0, 4)}年下期エリアごと出力(${classroomName})`;
+                const title = type == '上期個別\nCSV出力' ? `${st.substring(0, 4)}年上期個別出力${staffName}` : `${st.substring(0, 4)}年下期個別出力${staffName}`;
+                result.push({
+                    data: totalData,
+                    title: title
+                });
+            }
+            console.log('totalData', result);
+            res.json({
+                totalData: result
+            });
         }
-
-        // const result = await InputPossibility.findOne({ period: period });
-
-        // if (!result) return res.status(404).json({ message: 'Incentive not found' });
-        // res.json(result);
     } catch (err) {
         res.status(400).json({ error: err.message });
     }

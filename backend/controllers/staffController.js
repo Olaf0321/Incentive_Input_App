@@ -187,7 +187,6 @@ exports.getIncentivesListByMonth = async (req, res) => {
 
 //Change incentiveList
 exports.changeIncentivesList = async (req, res) => {
-  console.log('HHHHHHHHHHHHHHHH');
   try {
     const data = req.body;
     console.log('data', data);
