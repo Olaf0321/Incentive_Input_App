@@ -9,13 +9,18 @@ import {
   Alert
 } from "react-native";
 import DropDownPicker from "react-native-dropdown-picker";
+import { Dropdown } from 'react-native-element-dropdown';
 
 import SERVER_URL from "../../../config"
+
+interface DropdownItem {
+  label: string;
+  value: string;
+}
 
 const StaffRegistrationScreen = ({ navigation }: any) => {
   const [staffName, setStaffName] = useState("");
 
-  const [openOfClass, setOpenOfClass] = useState(false);
   const [valueOfClass, setValueOfClass] = useState("");
   const [classId, setClassId] = useState([
     { label: "A教室", value: "option1" },
@@ -23,7 +28,6 @@ const StaffRegistrationScreen = ({ navigation }: any) => {
     { label: "C教室", value: "option3" },
   ]);
 
-  const [openOfJob, setOpenOfJob] = useState(false);
   const [valueOfJob, setValueOfJob] = useState("");
   const [jobs, setJobs] = useState([
     { label: "正社員", value: "正社員" },
@@ -72,7 +76,7 @@ const StaffRegistrationScreen = ({ navigation }: any) => {
       const data = await response.json();
       for (let i = 0; i < data.length; i++) {
         if (data[i].name == 'AdminClassroom') continue;
-        result.push({label: data[i].name, value: data[i]._id});
+        result.push({ label: data[i].name, value: data[i]._id });
       }
       setClassId([...result]);
     } catch (err) {
@@ -105,35 +109,35 @@ const StaffRegistrationScreen = ({ navigation }: any) => {
       {/* Area and Business Selection */}
       <View style={styles.inputContainerRow}>
         <Text style={styles.label}>エリア・事業</Text>
-        <View style={[styles.dropdownWrapper, openOfClass && { zIndex: 2000 }]}>
-          <DropDownPicker
-            open={openOfClass}
-            value={valueOfClass}
-            items={classId}
-            setOpen={setOpenOfClass}
-            setValue={setValueOfClass}
-            setItems={setClassId}
-            placeholder="教室を選択"
-            style={styles.dropdown}
-          />
-        </View>
+        <Dropdown
+          style={styles.dropdown}
+          placeholderStyle={styles.placeholderStyle}
+          selectedTextStyle={styles.selectedTextStyle}
+          data={classId}
+          maxHeight={300}
+          labelField='label'
+          valueField='value'
+          placeholder="地域を選択してください。"
+          value={valueOfClass}
+          onChange={(item: DropdownItem) => setValueOfClass(item.value)}
+        />
       </View>
 
       {/* Employment Type Selection */}
       <View style={styles.inputContainerRow}>
         <Text style={styles.label}>雇用形態</Text>
-        <View style={[styles.dropdownWrapper, openOfJob && { zIndex: 1000 }]}>
-          <DropDownPicker
-            open={openOfJob}
-            value={valueOfJob}
-            items={jobs}
-            setOpen={setOpenOfJob}
-            setValue={setValueOfJob}
-            setItems={setJobs}
-            placeholder="ジョブを選択"
-            style={styles.dropdown}
-          />
-        </View>
+        <Dropdown
+          style={styles.dropdown}
+          placeholderStyle={styles.placeholderStyle}
+          selectedTextStyle={styles.selectedTextStyle}
+          data={jobs}
+          maxHeight={300}
+          labelField='label'
+          valueField='value'
+          placeholder="地域を選択してください。"
+          value={valueOfJob}
+          onChange={(item: DropdownItem) => setValueOfJob(item.value)}
+        />
       </View>
 
       {/* Register Button */}
@@ -216,7 +220,15 @@ const styles = StyleSheet.create({
     zIndex: 1, // 初期値を低めにする
   },
   dropdown: {
-    backgroundColor: "#fff",
-    borderColor: "#ccc",
+    height: 30,
+    width: '65%',
+    borderBottomColor: 'gray',
+    borderBottomWidth: 0.5,
+  },
+  placeholderStyle: {
+    fontSize: 16,
+  },
+  selectedTextStyle: {
+    fontSize: 16,
   },
 });

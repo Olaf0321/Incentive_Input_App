@@ -160,7 +160,7 @@ const BulkEditingDetailScreen: React.FC<RouteProps> = ({ route }) => {
               maxHeight={300}
               labelField='label'
               valueField='value'
-              placeholder="Select item"
+              placeholder="年を選択してください。"
               value={selectedYear}
               onChange={(item: DropdownItem) => setSelectedYear(item.value)}
             />
@@ -173,7 +173,7 @@ const BulkEditingDetailScreen: React.FC<RouteProps> = ({ route }) => {
               maxHeight={300}
               labelField='label'
               valueField='value'
-              placeholder="Select item"
+              placeholder="月を選択してください。"
               value={selectedMonth}
               onChange={(item: DropdownItem) => setSelectedMonth(item.value)}
             />
