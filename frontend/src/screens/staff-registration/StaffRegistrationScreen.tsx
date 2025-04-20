@@ -1,3 +1,236 @@
+// import React, { useEffect, useState } from "react";
+// import {
+//   View,
+//   Text,
+//   TextInput,
+//   TouchableOpacity,
+//   StyleSheet,
+//   SafeAreaView,
+//   Alert
+// } from "react-native";
+// import { Dropdown } from 'react-native-element-dropdown';
+
+// import SERVER_URL from "../../../config"
+
+// interface DropdownItem {
+//   label: string;
+//   value: string;
+// }
+
+// const StaffRegistrationScreen = ({ navigation }: any) => {
+//   const [staffName, setStaffName] = useState("");
+
+//   const [valueOfClass, setValueOfClass] = useState("");
+//   const [classId, setClassId] = useState([
+//     { label: "", value: "" },
+//     { label: "", value: "" },
+//   ]);
+
+//   const [valueOfJob, setValueOfJob] = useState("");
+//   const [jobs, setJobs] = useState([
+//     { label: "正社員", value: "正社員" },
+//     { label: "パートアルバイト", value: "パートアルバイト" }
+//   ]);
+
+//   const handleRegister = async () => {
+//     try {
+//       if (staffName == '') Alert.alert(`スタッフの名前を入力してください。`);
+//       else if (valueOfClass == "") Alert.alert(`エリア/業種を選択してください。`);
+//       else if (valueOfJob == "") Alert.alert(`雇用形態を選択してください。`);
+//       else {
+//         const response = await fetch(`${SERVER_URL}api/staff/`, {
+//           method: 'POST',
+//           headers: {
+//             "Content-Type": "application/json"
+//           },
+//           body: JSON.stringify({
+//             name: staffName,
+//             type: valueOfJob,
+//             classroom: valueOfClass
+//           })
+//         })
+//         const data = await response.json();
+//         Alert.alert(`${data.msg}`);
+//         if (data.code == 1) {
+//           setStaffName("");
+//           setValueOfClass("");
+//           setValueOfJob("");
+//         }
+//       }
+//     } catch (err) {
+//       Alert.alert(`error: ${err}`);
+//     }
+//   };
+
+//   const getClassrooms = async () => {
+//     try {
+//       const response = await fetch(`${SERVER_URL}api/classrooms/`, {
+//         method: 'GET',
+//         headers: {
+//           "Content-Type": "application/json",
+//         }
+//       });
+//       let result = [];
+//       const data = await response.json();
+//       for (let i = 0; i < data.length; i++) {
+//         if (data[i].name == 'AdminClassroom') continue;
+//         result.push({ label: data[i].name, value: data[i]._id });
+//       }
+//       setClassId([...result]);
+//     } catch (err) {
+//       Alert.alert(`${err}`);
+//     }
+//   }
+
+//   useEffect(() => {
+//     getClassrooms();
+//   }, [])
+
+//   return (
+//     <SafeAreaView style={styles.container}>
+//       {/* Header */}
+//       <View style={styles.header}>
+//         <Text style={styles.headerText}>スタッフ登録</Text>
+//         <Text style={styles.subtitle}>マスタ</Text>
+//       </View>
+
+//       {/* Input Fields */}
+//       <View style={styles.inputContainer}>
+//         <Text style={styles.label}>スタッフ名登録</Text>
+//         <TextInput
+//           style={styles.input}
+//           value={staffName}
+//           onChangeText={setStaffName}
+//         />
+//       </View>
+
+//       {/* Area and Business Selection */}
+//       <View style={styles.inputContainerRow}>
+//         <Text style={styles.label}>エリア・事業</Text>
+//         <Dropdown
+//           style={styles.dropdown}
+//           placeholderStyle={styles.placeholderStyle}
+//           selectedTextStyle={styles.selectedTextStyle}
+//           data={classId}
+//           maxHeight={300}
+//           labelField='label'
+//           valueField='value'
+//           placeholder="地域を選択してください。"
+//           value={valueOfClass}
+//           onChange={(item: DropdownItem) => setValueOfClass(item.value)}
+//         />
+//       </View>
+
+//       {/* Employment Type Selection */}
+//       <View style={styles.inputContainerRow}>
+//         <Text style={styles.label}>雇用形態</Text>
+//         <Dropdown
+//           style={styles.dropdown}
+//           placeholderStyle={styles.placeholderStyle}
+//           selectedTextStyle={styles.selectedTextStyle}
+//           data={jobs}
+//           maxHeight={300}
+//           labelField='label'
+//           valueField='value'
+//           placeholder="地域を選択してください。"
+//           value={valueOfJob}
+//           onChange={(item: DropdownItem) => setValueOfJob(item.value)}
+//         />
+//       </View>
+
+//       {/* Register Button */}
+//       <TouchableOpacity style={styles.button} onPress={handleRegister}>
+//         <Text style={styles.buttonText}>登録ボタン</Text>
+//       </TouchableOpacity>
+//     </SafeAreaView>
+//   );
+// };
+
+// export default StaffRegistrationScreen;
+
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     backgroundColor: "#FFFFFF",
+//     alignItems: "center",
+//     padding: 20,
+//   },
+//   header: {
+//     alignItems: "center",
+//     marginBottom: 120,
+//   },
+//   headerText: {
+//     fontSize: 22,
+//     fontWeight: "bold",
+//   },
+//   subtitle: {
+//     fontSize: 18,
+//     color: "#555",
+//     marginTop: 5,
+//   },
+//   inputContainer: {
+//     flexDirection: "row",
+//     alignItems: "center",
+//     marginBottom: 40,
+//     width: "100%",
+//   },
+//   rowContainer: {
+//     flexDirection: "row",
+//     alignItems: "center",
+//     justifyContent: "space-between",
+//     width: "100%",
+//     marginBottom: 20,
+//     zIndex: 1000, // Ensure dropdown appears above other elements
+//   },
+//   label: {
+//     fontSize: 16,
+//     width: 120,
+//   },
+//   input: {
+//     flex: 1,
+//     borderBottomWidth: 1,
+//     borderBottomColor: "#000",
+//     fontSize: 16,
+//     padding: 5,
+//   },
+//   button: {
+//     marginTop: 20,
+//     backgroundColor: "#2B5DAE",
+//     paddingVertical: 12,
+//     paddingHorizontal: 30,
+//     borderRadius: 5,
+//   },
+//   buttonText: {
+//     color: "#FFFFFF",
+//     fontSize: 18,
+//   },
+//   dropdownContainer: {
+//     flex: 1,
+//   },
+//   inputContainerRow: {
+//     flexDirection: "row",
+//     alignItems: "center",
+//     marginBottom: 40,
+//     width: "100%",
+//   },
+//   dropdownWrapper: {
+//     flex: 1,
+//     zIndex: 1, // 初期値を低めにする
+//   },
+//   dropdown: {
+//     height: 30,
+//     width: '65%',
+//     borderBottomColor: 'gray',
+//     borderBottomWidth: 0.5,
+//   },
+//   placeholderStyle: {
+//     fontSize: 16,
+//   },
+//   selectedTextStyle: {
+//     fontSize: 16,
+//   },
+// });
+
 import React, { useEffect, useState } from "react";
 import {
   View,
@@ -6,11 +239,13 @@ import {
   TouchableOpacity,
   StyleSheet,
   SafeAreaView,
-  Alert
+  Alert,
+  Dimensions,
 } from "react-native";
-import { Dropdown } from 'react-native-element-dropdown';
+import { Dropdown } from "react-native-element-dropdown";
+import SERVER_URL from "../../../config";
 
-import SERVER_URL from "../../../config"
+const { width, height } = Dimensions.get("window");
 
 interface DropdownItem {
   label: string;
@@ -21,37 +256,34 @@ const StaffRegistrationScreen = ({ navigation }: any) => {
   const [staffName, setStaffName] = useState("");
 
   const [valueOfClass, setValueOfClass] = useState("");
-  const [classId, setClassId] = useState([
-    { label: "", value: "" },
-    { label: "", value: "" },
-  ]);
+  const [classId, setClassId] = useState<DropdownItem[]>([]);
 
   const [valueOfJob, setValueOfJob] = useState("");
-  const [jobs, setJobs] = useState([
+  const [jobs] = useState([
     { label: "正社員", value: "正社員" },
-    { label: "パートアルバイト", value: "パートアルバイト" }
+    { label: "パートアルバイト", value: "パートアルバイト" },
   ]);
 
   const handleRegister = async () => {
     try {
-      if (staffName == '') Alert.alert(`スタッフの名前を入力してください。`);
-      else if (valueOfClass == "") Alert.alert(`エリア/業種を選択してください。`);
-      else if (valueOfJob == "") Alert.alert(`雇用形態を選択してください。`);
+      if (!staffName) Alert.alert("スタッフの名前を入力してください。");
+      else if (!valueOfClass) Alert.alert("エリア/業種を選択してください。");
+      else if (!valueOfJob) Alert.alert("雇用形態を選択してください。");
       else {
         const response = await fetch(`${SERVER_URL}api/staff/`, {
-          method: 'POST',
+          method: "POST",
           headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
           },
           body: JSON.stringify({
             name: staffName,
             type: valueOfJob,
-            classroom: valueOfClass
-          })
-        })
+            classroom: valueOfClass,
+          }),
+        });
         const data = await response.json();
         Alert.alert(`${data.msg}`);
-        if (data.code == 1) {
+        if (data.code === 1) {
           setStaffName("");
           setValueOfClass("");
           setValueOfJob("");
@@ -65,83 +297,83 @@ const StaffRegistrationScreen = ({ navigation }: any) => {
   const getClassrooms = async () => {
     try {
       const response = await fetch(`${SERVER_URL}api/classrooms/`, {
-        method: 'GET',
+        method: "GET",
         headers: {
           "Content-Type": "application/json",
-        }
+        },
       });
-      let result = [];
       const data = await response.json();
-      for (let i = 0; i < data.length; i++) {
-        if (data[i].name == 'AdminClassroom') continue;
-        result.push({ label: data[i].name, value: data[i]._id });
-      }
-      setClassId([...result]);
+      const filtered = data
+        .filter((item: any) => item.name !== "AdminClassroom")
+        .map((item: any) => ({ label: item.name, value: item._id }));
+      setClassId(filtered);
     } catch (err) {
       Alert.alert(`${err}`);
     }
-  }
+  };
 
   useEffect(() => {
     getClassrooms();
-  }, [])
+  }, []);
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.safeArea}>
       {/* Header */}
       <View style={styles.header}>
         <Text style={styles.headerText}>スタッフ登録</Text>
         <Text style={styles.subtitle}>マスタ</Text>
       </View>
 
-      {/* Input Fields */}
-      <View style={styles.inputContainer}>
-        <Text style={styles.label}>スタッフ名登録</Text>
-        <TextInput
-          style={styles.input}
-          value={staffName}
-          onChangeText={setStaffName}
-        />
-      </View>
+      <View style={styles.formContainer}>
+        {/* Staff Name */}
+        <View style={styles.inputRow}>
+          <Text style={styles.label}>スタッフ名登録</Text>
+          <TextInput
+            style={styles.input}
+            value={staffName}
+            onChangeText={setStaffName}
+          />
+        </View>
 
-      {/* Area and Business Selection */}
-      <View style={styles.inputContainerRow}>
-        <Text style={styles.label}>エリア・事業</Text>
-        <Dropdown
-          style={styles.dropdown}
-          placeholderStyle={styles.placeholderStyle}
-          selectedTextStyle={styles.selectedTextStyle}
-          data={classId}
-          maxHeight={300}
-          labelField='label'
-          valueField='value'
-          placeholder="地域を選択してください。"
-          value={valueOfClass}
-          onChange={(item: DropdownItem) => setValueOfClass(item.value)}
-        />
-      </View>
+        {/* Area Dropdown */}
+        <View style={styles.inputRow}>
+          <Text style={styles.label}>エリア・事業</Text>
+          <Dropdown
+            style={styles.dropdown}
+            placeholderStyle={styles.placeholderStyle}
+            selectedTextStyle={styles.selectedTextStyle}
+            data={classId}
+            maxHeight={300}
+            labelField="label"
+            valueField="value"
+            placeholder="地域を選択してください。"
+            value={valueOfClass}
+            onChange={(item: DropdownItem) => setValueOfClass(item.value)}
+          />
+        </View>
 
-      {/* Employment Type Selection */}
-      <View style={styles.inputContainerRow}>
-        <Text style={styles.label}>雇用形態</Text>
-        <Dropdown
-          style={styles.dropdown}
-          placeholderStyle={styles.placeholderStyle}
-          selectedTextStyle={styles.selectedTextStyle}
-          data={jobs}
-          maxHeight={300}
-          labelField='label'
-          valueField='value'
-          placeholder="地域を選択してください。"
-          value={valueOfJob}
-          onChange={(item: DropdownItem) => setValueOfJob(item.value)}
-        />
-      </View>
+        {/* Job Type Dropdown */}
+        <View style={styles.inputRow}>
+          <Text style={styles.label}>雇用形態</Text>
+          <Dropdown
+            style={styles.dropdown}
+            placeholderStyle={styles.placeholderStyle}
+            selectedTextStyle={styles.selectedTextStyle}
+            data={jobs}
+            maxHeight={300}
+            labelField="label"
+            valueField="value"
+            placeholder="タイプを選択してください。"
+            value={valueOfJob}
+            onChange={(item: DropdownItem) => setValueOfJob(item.value)}
+          />
+        </View>
 
-      {/* Register Button */}
-      <TouchableOpacity style={styles.button} onPress={handleRegister}>
-        <Text style={styles.buttonText}>登録ボタン</Text>
-      </TouchableOpacity>
+        {/* Register Button */}
+        <TouchableOpacity style={styles.button} onPress={handleRegister}>
+          <Text style={styles.buttonText}>登録ボタン</Text>
+        </TouchableOpacity>
+      </View>
     </SafeAreaView>
   );
 };
@@ -149,84 +381,79 @@ const StaffRegistrationScreen = ({ navigation }: any) => {
 export default StaffRegistrationScreen;
 
 const styles = StyleSheet.create({
-  container: {
+  safeArea: {
     flex: 1,
     backgroundColor: "#FFFFFF",
-    alignItems: "center",
-    padding: 20,
+    justifyContent: "center",
+    paddingHorizontal: width * 0.05,
+    paddingBottom: 40,
   },
   header: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
     alignItems: "center",
-    marginBottom: 120,
+    paddingVertical: 20,
   },
   headerText: {
-    fontSize: 22,
+    fontSize: width * 0.06,
     fontWeight: "bold",
+    textAlign: "center",
   },
   subtitle: {
-    fontSize: 18,
+    fontSize: width * 0.045,
     color: "#555",
     marginTop: 5,
   },
-  inputContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 40,
+  formContainer: {
     width: "100%",
   },
-  rowContainer: {
+  inputRow: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-between",
-    width: "100%",
-    marginBottom: 20,
-    zIndex: 1000, // Ensure dropdown appears above other elements
+    marginBottom: 25,
+    zIndex: 10,
   },
   label: {
-    fontSize: 16,
-    width: 120,
+    width: "35%",
+    fontSize: width * 0.04,
+    textAlign: "center"
   },
   input: {
     flex: 1,
-    borderBottomWidth: 1,
+    height: 40,
+    borderBottomWidth: 1.5,
     borderBottomColor: "#000",
-    fontSize: 16,
-    padding: 5,
-  },
-  button: {
-    marginTop: 20,
-    backgroundColor: "#2B5DAE",
-    paddingVertical: 12,
-    paddingHorizontal: 30,
-    borderRadius: 5,
-  },
-  buttonText: {
-    color: "#FFFFFF",
-    fontSize: 18,
-  },
-  dropdownContainer: {
-    flex: 1,
-  },
-  inputContainerRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 40,
-    width: "100%",
-  },
-  dropdownWrapper: {
-    flex: 1,
-    zIndex: 1, // 初期値を低めにする
+    fontSize: width * 0.04,
+    paddingHorizontal: 5,
+    paddingBottom: 5,
   },
   dropdown: {
-    height: 30,
-    width: '65%',
-    borderBottomColor: 'gray',
-    borderBottomWidth: 0.5,
+    flex: 1,
+    height: 40,
+    borderBottomWidth: 1.5,
+    borderBottomColor: "#000",
   },
   placeholderStyle: {
-    fontSize: 16,
+    fontSize: width * 0.04,
+    color: "#999",
   },
   selectedTextStyle: {
-    fontSize: 16,
+    fontSize: width * 0.04,
+  },
+  button: {
+    marginTop: 40,
+    alignItems: "center",
+  },
+  buttonText: {
+    backgroundColor: "#2B5DAE",
+    color: "#FFFFFF",
+    fontSize: width * 0.045,
+    fontWeight: "bold",
+    paddingVertical: 12,
+    paddingHorizontal: 50,
+    borderRadius: 8,
+    textAlign: "center",
   },
 });

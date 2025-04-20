@@ -128,14 +128,14 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     flexDirection: "row",
-    alignItems: "flex-end",
+    alignItems: "center",
     marginBottom: 25,
   },
   label: {
     width: "25%",
     fontSize: width * 0.04,
     marginRight: 10,
-    textAlign: "right",
+    textAlign: "center",
   },
   input: {
     flex: 1,
