@@ -247,7 +247,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   formContainer: {
-    width: "100%",
+    width: "100%"
   },
   inputRow: {
     flexDirection: "row",
