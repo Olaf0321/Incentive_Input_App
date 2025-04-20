@@ -19,12 +19,27 @@ const SecondHalfClearScreen = ({ navigation }: any) => {
           status: status
         })
       });
+
+      const currentYear = new Date().getFullYear();
+      const currentMonth = new Date().getMonth() + 1;
+
       const data = await response.json();
       if (screen == 'SecondHalfCloseScreen') {
         Alert.alert('下期締の入力が制限されました。');
       } else if (screen == 'SecondHalfRecoveryScreen') {
         Alert.alert('下期締の入力が復帰しました。');
       } else {
+        const response = await fetch(`${SERVER_URL}api/staff/delete`, {
+          method: 'POST',
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            currentYear: currentYear,
+            oldMonth: currentMonth,
+            status: '下期入力'
+          })
+        })
         Alert.alert('下半期のデータを削除しました。');
       }
     } catch (err) {

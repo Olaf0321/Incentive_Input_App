@@ -189,7 +189,7 @@ const ActivityScreen = ({ route }: any) => {
         body: JSON.stringify({
           name: employee.name,
           currentYear: currentYear,
-          currentMonth: currentMonth,
+          oldMonth: currentMonth,
           status: status
         })
       });
