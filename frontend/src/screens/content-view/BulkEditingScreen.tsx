@@ -58,67 +58,67 @@ const BulkEditingScreen = ({ navigation }: any) => {
         <SafeAreaView style={styles.safeArea}>
             {/* Header */}
             <View style={styles.header}>
-            <Text style={styles.headerText}>内容閲覧・全体・各教室・編集・CSV出力</Text>
-            <Text style={styles.subtitle}>一括編集</Text>
+                <Text style={styles.headerText}>内容閲覧・全体・各教室・編集・CSV出力</Text>
+                <Text style={styles.subtitle}>一括編集</Text>
             </View>
-        <ScrollView style={styles.container}>
+            <ScrollView style={styles.container}>
 
-            {/* Regular Employees Table */}
-            <Text style={styles.sectionTitle}>正社員</Text>
-            <View style={styles.table}>
-                <View style={styles.tableRowHeader}>
-                    <Text style={styles.tableHeader}>番号</Text>
-                    <Text style={styles.tableHeader}>氏名</Text>
-                </View>
-                {regularEmployees.length > 0 && regularEmployees.map((emp, index) => (
-                    <TouchableOpacity
-                        key={index}
-                        onPress={() =>
-                            navigation.navigate('一括編集詳細', {
-                                employee: emp,
-                            })
-                        }
-                        style={styles.tableRow}
-                    >
-                        <Text style={styles.tableCell}>{index + 1}</Text>
-                        <Text style={styles.tableCell}>{emp.name}</Text>
-                    </TouchableOpacity>
-                ))}
-                {regularEmployees.length == 0 &&
-                    <View style={styles.tableRow}>
-                        <Text style={styles.tablenone}>登録されたスタッフはありません。</Text>
+                {/* Regular Employees Table */}
+                <Text style={styles.sectionTitle}>正社員</Text>
+                <View style={styles.table}>
+                    <View style={styles.tableRowHeader}>
+                        <Text style={styles.tableHeader}>番号</Text>
+                        <Text style={styles.tableHeader}>氏名</Text>
                     </View>
-                }
-            </View>
+                    {regularEmployees.length > 0 && regularEmployees.map((emp, index) => (
+                        <TouchableOpacity
+                            key={index}
+                            onPress={() =>
+                                navigation.navigate('一括編集詳細', {
+                                    employee: emp,
+                                })
+                            }
+                            style={styles.tableRow}
+                        >
+                            <Text style={styles.tableCell}>{index + 1}</Text>
+                            <Text style={styles.tableCell}>{emp.name}</Text>
+                        </TouchableOpacity>
+                    ))}
+                    {regularEmployees.length == 0 &&
+                        <View style={styles.tableRow}>
+                            <Text style={styles.tablenone}>登録されたスタッフはありません。</Text>
+                        </View>
+                    }
+                </View>
 
-            {/* Part-Time Employees Table */}
-            <Text style={styles.sectionTitle}>パートアルバイト</Text>
-            <View style={styles.table}>
-                <View style={styles.tableRowHeader}>
-                    <Text style={styles.tableHeader}>番号</Text>
-                    <Text style={styles.tableHeader}>氏名</Text>
-                </View>
-                {partTimeEmployees.length > 0 && partTimeEmployees.map((emp, index) => (
-                    <TouchableOpacity
-                        key={index}
-                        onPress={() =>
-                            navigation.navigate('一括編集詳細', {
-                                employee: emp,
-                            })
-                        }
-                        style={styles.tableRow}
-                    >
-                        <Text style={styles.tableCell}>{index + 1}</Text>
-                        <Text style={styles.tableCell}>{emp.name}</Text>
-                    </TouchableOpacity>
-                ))}
-                {partTimeEmployees.length == 0 &&
-                    <View style={styles.tableRow}>
-                        <Text style={styles.tablenone}>登録されたスタッフはありません。</Text>
+                {/* Part-Time Employees Table */}
+                <Text style={styles.sectionTitle}>パートアルバイト</Text>
+                <View style={styles.table}>
+                    <View style={styles.tableRowHeader}>
+                        <Text style={styles.tableHeader}>番号</Text>
+                        <Text style={styles.tableHeader}>氏名</Text>
                     </View>
-                }
-            </View> 
-        </ScrollView>
+                    {partTimeEmployees.length > 0 && partTimeEmployees.map((emp, index) => (
+                        <TouchableOpacity
+                            key={index}
+                            onPress={() =>
+                                navigation.navigate('一括編集詳細', {
+                                    employee: emp,
+                                })
+                            }
+                            style={styles.tableRow}
+                        >
+                            <Text style={styles.tableCell}>{index + 1}</Text>
+                            <Text style={styles.tableCell}>{emp.name}</Text>
+                        </TouchableOpacity>
+                    ))}
+                    {partTimeEmployees.length == 0 &&
+                        <View style={styles.tableRow}>
+                            <Text style={styles.tablenone}>登録されたスタッフはありません。</Text>
+                        </View>
+                    }
+                </View>
+            </ScrollView>
         </SafeAreaView>
     );
 };
