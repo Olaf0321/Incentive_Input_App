@@ -164,7 +164,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
     justifyContent: "center",
     paddingHorizontal: width * 0.05,
-    paddingBottom: 40,
   },
   header: {
     position: "absolute",

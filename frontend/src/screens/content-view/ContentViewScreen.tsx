@@ -1,5 +1,14 @@
-import React from "react";
-import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView } from "react-native";
+// import React from "react";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  SafeAreaView,
+  Dimensions,
+} from "react-native";
+
+const { width } = Dimensions.get("window");
 
 const ContentReviewScreen = ({ navigation }: any) => {
   const handlePress = (screen: string) => {
@@ -7,10 +16,12 @@ const ContentReviewScreen = ({ navigation }: any) => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.safeArea}>
       {/* Header */}
-      <Text style={styles.headerText}>内容閲覧・全体・各教室・編集・CSV出力</Text>
-      <Text style={styles.subtitle}>マスタ</Text>
+      <View style={styles.header}>
+        <Text style={styles.headerText}>内容閲覧・全体・各教室・編集・CSV出力</Text>
+        <Text style={styles.subtitle}>マスタ</Text>
+      </View>
 
       {/* Button Grid */}
       <View style={styles.gridContainer}>
@@ -37,43 +48,49 @@ const ContentReviewScreen = ({ navigation }: any) => {
 export default ContentReviewScreen;
 
 const styles = StyleSheet.create({
-  container: {
+  safeArea: {
     flex: 1,
     backgroundColor: "#FFFFFF",
+    justifyContent: "center",
+    paddingHorizontal: width * 0.05,
+  },
+  header: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
     alignItems: "center",
-    padding: 20,
+    paddingVertical: 20,
   },
   headerText: {
-    fontSize: 22,
+    fontSize: width * 0.06,
     fontWeight: "bold",
     textAlign: "center",
-    marginBottom: 5,
   },
   subtitle: {
-    fontSize: 18,
+    fontSize: width * 0.045,
     color: "#555",
-    textAlign: "center",
-    marginBottom: 120,
+    marginTop: 5,
   },
   gridContainer: {
     width: "100%",
     flexDirection: "row",
     flexWrap: "wrap",
-    justifyContent: "space-between", // Distributes buttons evenly
-    paddingHorizontal: 10,
+    justifyContent: "space-between",
   },
   button: {
-    width: "48%", // Ensures two buttons per row
-    height: 120,
+    width: "48%",
+    height: width * 0.3,
     backgroundColor: "#2B5DAE",
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 8,
-    marginBottom: 30, // Adds spacing between rows
+    marginBottom: width * 0.08,
   },
   buttonText: {
     color: "#FFFFFF",
-    fontSize: 16,
+    fontSize: width * 0.04,
     fontWeight: "bold",
+    textAlign: "center",
   },
 });
