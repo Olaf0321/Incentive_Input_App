@@ -1,6 +1,8 @@
 import React from "react";
-import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, Alert } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, Dimensions, SafeAreaView, Alert } from "react-native";
 import SERVER_URL from "../../../config";
+
+const { width } = Dimensions.get("window");
 
 const SecondHalfClearScreen = ({ navigation }: any) => {
   const handlePress = async (screen: string) => {
@@ -50,9 +52,11 @@ const SecondHalfClearScreen = ({ navigation }: any) => {
 
   return (
     <SafeAreaView style={styles.container}>
+      <View style={styles.header}>
       {/* Header */}
       <Text style={styles.headerText}>下期締め切り　下期データクリア</Text>
       <Text style={styles.subtitle}>マスタ</Text>
+      </View>
 
       {/* Buttons */}
       <View style={styles.buttonContainer}>
@@ -80,18 +84,28 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
     alignItems: "center",
     padding: 20,
+    justifyContent: 'center'
+  },
+  header: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    alignItems: "center",
+    paddingVertical: 20,
+    paddingHorizontal: width * 0.04
   },
   headerText: {
-    fontSize: 22,
+    fontSize: width * 0.055,
     fontWeight: "bold",
     textAlign: "center",
-    marginBottom: 5,
+    marginBottom: 15,
   },
   subtitle: {
-    fontSize: 18,
+    fontSize: width * 0.045,
     color: "#555",
     textAlign: "center",
-    marginBottom: 120,
+    marginBottom: 20,
   },
   buttonContainer: {
     width: "100%",
