@@ -57,6 +57,7 @@ const IncentiveSettingsScreen = ({ navigation }: any) => {
         Alert.alert(`${data.msg}`);
         if (data.code == 1) {
           setSalaryItem("");
+          setValueOfType("");
           setValueOfPrice("");
           setValueOfRating("");
         }

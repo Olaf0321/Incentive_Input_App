@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, TextInput, ScrollView, StyleSheet, Alert, TouchableOpacity } from "react-native";
+import { View, Text, TextInput, ScrollView, StyleSheet, Dimensions, SafeAreaView, Alert, TouchableOpacity } from "react-native";
 import SERVER_URL from "../../../config";
 import { Dropdown } from 'react-native-element-dropdown';
+
+const { width } = Dimensions.get("window");
 
 interface RouteProps {
   route: {
@@ -26,7 +28,7 @@ interface DropdownItem {
   value: string;
 }
 
-const BulkEditingDetailScreen  = ({ route }: any) => {
+const BulkEditingDetailScreen = ({ route }: any) => {
   const { employee } = route.params;
   const [incentives, setIncentives] = useState<Incentive[]>([
     { name: "", type: "", unit_price: 0, upper_limit: 0 }
@@ -91,7 +93,7 @@ const BulkEditingDetailScreen  = ({ route }: any) => {
       console.log('incentivesincentives============', arr);
 
       setIncentives(arr);
-      
+
 
       const years: DropdownItem[] = [];
       let year = 2025;
@@ -116,7 +118,7 @@ const BulkEditingDetailScreen  = ({ route }: any) => {
     try {
       const newAmountArr: { [key: string]: string } = {};
       console.log('incentives', incentives);
-      incentives.map(ele=>newAmountArr[ele.name] = '0');
+      incentives.map(ele => newAmountArr[ele.name] = '0');
       setAmountArr(newAmountArr);
       const result = await fetch(`${SERVER_URL}api/staff/incentives/month`, {
         method: 'POST',
@@ -145,8 +147,8 @@ const BulkEditingDetailScreen  = ({ route }: any) => {
   }, [selectedYear, selectedMonth, incentives]);
 
   return (
-    <View style={styles.container}>
-      <View style={styles.fixedHeader}>
+    <SafeAreaView style={styles.safeArea}>
+      <View style={styles.header}>
         <Text style={styles.headerText}>一括編集</Text>
         <Text style={styles.subtitle}>一括編集詳細</Text>
         <View style={styles.basicInfo}>
@@ -197,8 +199,7 @@ const BulkEditingDetailScreen  = ({ route }: any) => {
           </View>
         </View>
       </View>
-
-      <ScrollView contentContainerStyle={styles.scrollContent}>
+      <ScrollView style={styles.container}>
         <View style={styles.table}>
           <View style={styles.tableRowHeader}>
             <Text style={styles.tableHeader}>インセンティブ項目</Text>
@@ -233,8 +234,7 @@ const BulkEditingDetailScreen  = ({ route }: any) => {
         </View>
       </ScrollView>
 
-
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -242,20 +242,33 @@ export default BulkEditingDetailScreen;
 
 
 const styles = StyleSheet.create({
-  container: {
+  safeArea: {
     flex: 1,
     backgroundColor: "#FFFFFF",
-    paddingHorizontal: 15,
-    paddingVertical: 10,
+    justifyContent: "center",
+    paddingHorizontal: width * 0.05,
+  },
+  container: {
+    flex: 1,
+    marginTop: 180
+  },
+  header: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    // alignItems: "center",
+    paddingVertical: 20,
+    paddingHorizontal: width * 0.04
   },
   headerText: {
-    fontSize: 22,
+    fontSize: width * 0.055,
     fontWeight: "bold",
     textAlign: "center",
     marginBottom: 15,
   },
   subtitle: {
-    fontSize: 18,
+    fontSize: width * 0.045,
     color: "#555",
     textAlign: "center",
     marginBottom: 20,
@@ -289,28 +302,25 @@ const styles = StyleSheet.create({
     flex: 1,
     color: "#FFFFFF",
     fontWeight: "bold",
+    fontSize: width * 0.035,
     textAlign: "center",
   },
   tableRow: {
     flexDirection: "row",
     borderBottomWidth: 1,
     borderBottomColor: "#000",
-    paddingVertical: 5,
-    alignItems: "center"
+    paddingVertical: 8,
   },
   tableCell: {
     flex: 1,
+    fontSize: width * 0.035,
     textAlign: "center",
-    paddingVertical: 3,
-    borderWidth: 0,
-    borderColor: "#ccc",
-    borderRadius: 4,
-    marginHorizontal: 4,
   },
   tablenone: {
     flex: 1,
+    fontSize: width * 0.035,
     textAlign: "left",
-    marginLeft: 30
+    marginLeft: width * 0.08,
   },
   inputCell: {
     flex: 1,
@@ -334,7 +344,7 @@ const styles = StyleSheet.create({
   },
   childbasicInfo: {
     flexDirection: "row",
-    alignItems: "flex-end"
+    alignItems: "flex-end",
   },
   fixedButtons: {
   },
@@ -375,15 +385,10 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0.5,
     marginLeft: 10,
   },
-  placeholderStyle: {
-    fontSize: 16,
-  },
-  selectedTextStyle: {
-    fontSize: 16,
-  },
   basicInfo: {
     flexDirection: "row",
     alignItems: "flex-end",
-    justifyContent: 'space-between',
+    justifyContent: "space-between",
+    paddingHorizontal: width * 0.01,
   }
 });
