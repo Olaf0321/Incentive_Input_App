@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, ScrollView, StyleSheet, Alert, TouchableOpacity } from "react-native";
+import { View, Text, ScrollView, StyleSheet, Alert, TouchableOpacity, SafeAreaView, Dimensions } from "react-native";
 import SERVER_URL from "../../../config";
+
+const { width } = Dimensions.get("window");
 
 const BulkEditingScreen = ({ navigation }: any) => {
     // Sample Data (Assuming received from backend)
@@ -53,13 +55,16 @@ const BulkEditingScreen = ({ navigation }: any) => {
     })
 
     return (
-        <ScrollView style={styles.container}>
+        <SafeAreaView style={styles.safeArea}>
             {/* Header */}
+            <View style={styles.header}>
             <Text style={styles.headerText}>内容閲覧・全体・各教室・編集・CSV出力</Text>
             <Text style={styles.subtitle}>一括編集</Text>
+            </View>
+        <ScrollView style={styles.container}>
 
             {/* Regular Employees Table */}
-            <Text style={styles.sectionTitle}>正社員用</Text>
+            <Text style={styles.sectionTitle}>正社員</Text>
             <View style={styles.table}>
                 <View style={styles.tableRowHeader}>
                     <Text style={styles.tableHeader}>番号</Text>
@@ -87,7 +92,7 @@ const BulkEditingScreen = ({ navigation }: any) => {
             </View>
 
             {/* Part-Time Employees Table */}
-            <Text style={styles.sectionTitle}>パートアルバイト用</Text>
+            <Text style={styles.sectionTitle}>パートアルバイト</Text>
             <View style={styles.table}>
                 <View style={styles.tableRowHeader}>
                     <Text style={styles.tableHeader}>番号</Text>
@@ -114,32 +119,52 @@ const BulkEditingScreen = ({ navigation }: any) => {
                 }
             </View> 
         </ScrollView>
+        </SafeAreaView>
     );
 };
 
 export default BulkEditingScreen;
 
 const styles = StyleSheet.create({
-    container: {
+    safeArea: {
         flex: 1,
         backgroundColor: "#FFFFFF",
-        paddingHorizontal: 15,
-        paddingVertical: 20,
+        justifyContent: "center",
+        paddingHorizontal: width * 0.05,
     },
-    headerText: {   
-        fontSize: 22,
+    container: {
+        flex: 1,
+        marginTop: 140
+    },
+    header: {
+        position: "absolute",
+        top: 0,
+        left: 0,
+        right: 0,
+        alignItems: "center",
+        paddingVertical: 20,
+        paddingHorizontal: width * 0.04
+    },
+    headerText: {
+        fontSize: width * 0.055,
         fontWeight: "bold",
         textAlign: "center",
         marginBottom: 15,
     },
     subtitle: {
-        fontSize: 18,
+        fontSize: width * 0.045,
         color: "#555",
         textAlign: "center",
         marginBottom: 20,
     },
+    addtitle: {
+        fontSize: width * 0.045,
+        textAlign: "center",
+        marginBottom: 20,
+        fontWeight: "bold",
+    },
     sectionTitle: {
-        fontSize: 18,
+        fontSize: width * 0.045,
         fontWeight: "bold",
         marginTop: 20,
         marginBottom: 10,
@@ -147,7 +172,7 @@ const styles = StyleSheet.create({
     table: {
         borderWidth: 1,
         borderColor: "#000",
-        marginBottom: 50,
+        marginBottom: 15,
     },
     tableRowHeader: {
         flexDirection: "row",
@@ -158,21 +183,24 @@ const styles = StyleSheet.create({
         flex: 1,
         color: "#FFFFFF",
         fontWeight: "bold",
+        fontSize: width * 0.035,
         textAlign: "center",
     },
     tableRow: {
         flexDirection: "row",
         borderBottomWidth: 1,
         borderBottomColor: "#000",
-        paddingVertical: 5,
+        paddingVertical: 8,
     },
     tableCell: {
         flex: 1,
+        fontSize: width * 0.035,
         textAlign: "center",
     },
     tablenone: {
         flex: 1,
+        fontSize: width * 0.035,
         textAlign: "left",
-        marginLeft: 30
-    }
+        marginLeft: width * 0.08,
+    },
 });
