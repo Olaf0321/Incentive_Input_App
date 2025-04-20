@@ -7,7 +7,8 @@ import {
   StyleSheet,
   SafeAreaView,
   Alert,
-  BackHandler
+  BackHandler,
+  Dimensions,
 } from "react-native";
 import { Dropdown } from 'react-native-element-dropdown';
 
@@ -17,6 +18,8 @@ interface DropdownItem {
   label: string;
   value: string;
 }
+
+const { width } = Dimensions.get("window");
 
 const EmployeeDetailScreen = ({ navigation, route }: any) => {
   const { employee } = route.params;
@@ -143,69 +146,71 @@ const EmployeeDetailScreen = ({ navigation, route }: any) => {
         <Text style={styles.subtitle}>マスタ</Text>
       </View>
 
-      <View style={styles.inputContainer}>
-        <Text style={styles.label}>スタッフ名登録</Text>
-        <TextInput
-          style={styles.input}
-          value={staffName}
-          onChangeText={setStaffName}
-          editable={isEditing}
-        />
-      </View>
+      <View style={styles.formContainer}>
+        <View style={styles.inputRow}>
+          <Text style={styles.label}>スタッフ名登録</Text>
+          <TextInput
+            style={styles.input}
+            value={staffName}
+            onChangeText={setStaffName}
+            editable={isEditing}
+          />
+        </View>
 
-      <View style={styles.inputContainerRow}>
-        <Text style={styles.label}>エリア・事業</Text>
-        <Dropdown
-          style={styles.dropdown}
-          placeholderStyle={styles.placeholderStyle}
-          selectedTextStyle={styles.selectedTextStyle}
-          data={classId}
-          maxHeight={300}
-          labelField='label'
-          valueField='value'
-          placeholder="地域を選択してください。"
-          value={valueOfClass}
-          onChange={(item: DropdownItem) => setValueOfClass(item.value)}
-          disable={!isEditing}
-        />
-      </View>
+        <View style={styles.inputRow}>
+          <Text style={styles.label}>エリア・事業</Text>
+          <Dropdown
+            style={styles.dropdown}
+            placeholderStyle={styles.placeholderStyle}
+            selectedTextStyle={styles.selectedTextStyle}
+            data={classId}
+            maxHeight={300}
+            labelField='label'
+            valueField='value'
+            placeholder="地域を選択してください。"
+            value={valueOfClass}
+            onChange={(item: DropdownItem) => setValueOfClass(item.value)}
+            disable={!isEditing}
+          />
+        </View>
 
-      <View style={styles.inputContainerRow}>
-        <Text style={styles.label}>雇用形態</Text>
-        <Dropdown
-          style={styles.dropdown}
-          placeholderStyle={styles.placeholderStyle}
-          selectedTextStyle={styles.selectedTextStyle}
-          data={jobs}
-          maxHeight={300}
-          labelField='label'
-          valueField='value'
-          placeholder="雇用形態を選択してください。"
-          value={valueOfJob}
-          onChange={(item: DropdownItem) => setValueOfJob(item.value)}
-          disable={!isEditing}
-        />
-      </View>
+        <View style={styles.inputRow}>
+          <Text style={styles.label}>雇用形態</Text>
+          <Dropdown
+            style={styles.dropdown}
+            placeholderStyle={styles.placeholderStyle}
+            selectedTextStyle={styles.selectedTextStyle}
+            data={jobs}
+            maxHeight={300}
+            labelField='label'
+            valueField='value'
+            placeholder="雇用形態を選択してください。"
+            value={valueOfJob}
+            onChange={(item: DropdownItem) => setValueOfJob(item.value)}
+            disable={!isEditing}
+          />
+        </View>
 
-      <View style={styles.buttonStyle}>
-        {!isEditing ? (
-          <TouchableOpacity style={styles.button} onPress={() => setIsEditing(true)}>
-            <Text style={styles.buttonText}>編集</Text>
+        <View style={styles.buttonStyle}>
+          {!isEditing ? (
+            <TouchableOpacity style={styles.button} onPress={() => setIsEditing(true)}>
+              <Text style={styles.buttonText}>編集</Text>
+            </TouchableOpacity>
+          ) : (
+            <>
+              <TouchableOpacity style={styles.button} onPress={saveEdits}>
+                <Text style={styles.buttonText}>保存</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.cancelButton} onPress={cancelEdits}>
+                <Text style={styles.buttonText}>キャンセル</Text>
+              </TouchableOpacity>
+            </>
+          )}
+
+          <TouchableOpacity style={styles.DeleteButton} onPress={confirmDelete}>
+            <Text style={styles.buttonText}>消去</Text>
           </TouchableOpacity>
-        ) : (
-          <>
-            <TouchableOpacity style={styles.button} onPress={saveEdits}>
-              <Text style={styles.buttonText}>保存</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.cancelButton} onPress={cancelEdits}>
-              <Text style={styles.buttonText}>キャンセル</Text>
-            </TouchableOpacity>
-          </>
-        )}
-
-        <TouchableOpacity style={styles.DeleteButton} onPress={confirmDelete}>
-          <Text style={styles.buttonText}>消去</Text>
-        </TouchableOpacity>
+        </View>
       </View>
     </SafeAreaView>
   );
@@ -217,60 +222,70 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#FFFFFF",
-    alignItems: "center",
-    padding: 20,
+    justifyContent: "center",
+    paddingHorizontal: width * 0.05,
   },
   header: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
     alignItems: "center",
-    marginBottom: 120,
+    paddingVertical: 20,
+    paddingHorizontal: width * 0.04
   },
   headerText: {
-    fontSize: 22,
+    fontSize: width * 0.055,
     fontWeight: "bold",
+    textAlign: "center",
+    marginBottom: 15,
   },
   subtitle: {
-    fontSize: 18,
+    fontSize: width * 0.045,
     color: "#555",
-    marginTop: 5,
+    textAlign: "center",
+    marginBottom: 20,
   },
-  inputContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 40,
+  formContainer: {
     width: "100%",
   },
-  inputContainerRow: {
+  inputRow: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 40,
-    width: "100%",
+    marginBottom: 25,
+    zIndex: 10,
   },
   label: {
-    fontSize: 16,
-    width: 120,
+    width: "35%",
+    fontSize: width * 0.04,
+    textAlign: "center"
   },
   input: {
     flex: 1,
-    borderBottomWidth: 1,
+    height: 40,
+    borderBottomWidth: 1.5,
     borderBottomColor: "#000",
-    fontSize: 16,
-    padding: 5,
+    fontSize: width * 0.04,
+    paddingHorizontal: 5,
+    paddingBottom: 5,
   },
   dropdown: {
-    height: 30,
-    width: '65%',
-    borderBottomColor: 'gray',
-    borderBottomWidth: 0.5,
+    flex: 1,
+    height: 40,
+    borderBottomWidth: 1.5,
+    borderBottomColor: "#000",
   },
   placeholderStyle: {
-    fontSize: 16,
+    fontSize: width * 0.04,
+    color: "#999",
   },
   selectedTextStyle: {
-    fontSize: 16,
+    fontSize: width * 0.04,
   },
   buttonStyle: {
     flexDirection: "row",
     marginTop: 20,
+    justifyContent: 'center'
   },
   button: {
     backgroundColor: "#2B5DAE",
