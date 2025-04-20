@@ -6,42 +6,33 @@ import {
   TouchableOpacity,
   StyleSheet,
   SafeAreaView,
-  Alert
+  Alert,
+  Dimensions,
 } from "react-native";
-import DropDownPicker from "react-native-dropdown-picker";
-import { Dropdown } from 'react-native-element-dropdown';
-
+import { Dropdown } from "react-native-element-dropdown";
 import SERVER_URL from "../../../config";
-// DropDownPicker.setListMode("MODAL")
+
+const { width } = Dimensions.get("window");
 
 interface DropdownItem {
   label: string;
-  value: string;
+  value: any;
 }
-
 
 const IncentiveSettingsScreen = ({ navigation }: any) => {
   const [salaryItem, setSalaryItem] = useState("");
 
-  const [valueOfType, setValueOfType] = useState('');
+  const [valueOfType, setValueOfType] = useState("");
   const [types, setTypes] = useState([
     { label: "正社員用", value: "正社員用" },
     { label: "パートアルバイト用", value: "パートアルバイト用" },
   ]);
 
-  const [valueOfPrice, setValueOfPrice] = useState('');
-  const [prices, setPrices] = useState([
-    { label: "100", value: 100 },
-    { label: "200", value: 200 },
-    { label: "300", value: 300 },
-  ]);
+  const [valueOfPrice, setValueOfPrice] = useState("");
+  const [prices, setPrices] = useState<DropdownItem[]>([]);
 
-  const [valueOfRating, setValueOfRating] = useState('');
-  const [ratings, setRatings] = useState([
-    { label: "100", value: 100 },
-    { label: "200", value: 200 },
-    { label: "300", value: 300 },
-  ]);
+  const [valueOfRating, setValueOfRating] = useState("");
+  const [ratings, setRatings] = useState<DropdownItem[]>([]);
 
   const handleRegister = async () => {
     try {
@@ -75,112 +66,92 @@ const IncentiveSettingsScreen = ({ navigation }: any) => {
     }
   };
 
-  useEffect(()=> {
-    let arr = [];
+  useEffect(() => {
+    let arr: DropdownItem[] = [];
     for (let i = 100; i <= 10000; i += 100) {
-      arr.push({label: String(i), value: i});
+      arr.push({ label: String(i), value: i });
     }
     setPrices([...arr]);
 
     arr = [];
     for (let i = 1; i <= 20; i++) {
-      arr.push({label: String(i), value: i});
+      arr.push({ label: String(i), value: i });
     }
-    for (let i = 30; i <= 200; i+=10) {
-      arr.push({label: String(i), value: i});
+    for (let i = 30; i <= 200; i += 10) {
+      arr.push({ label: String(i), value: i });
     }
     setRatings([...arr]);
-  }, [])
+  }, []);
 
   return (
-    <SafeAreaView style={styles.container}>
-      {/* Header */}
+    <SafeAreaView style={styles.safeArea}>
       <View style={styles.header}>
         <Text style={styles.headerText}>インセンティブ　項目設定</Text>
         <Text style={styles.subtitle}>マスタ</Text>
       </View>
 
-      {/* Input Fields */}
-      <View style={styles.inputContainer}>
-        <Text style={styles.label}>給与項目名登録</Text>
-        <TextInput
-          style={styles.input}
-          value={salaryItem}
-          onChangeText={setSalaryItem}
-        />
-      </View>
-
-      {/* Area and Business Selection */}
-      <View style={styles.inputContainerRow}>
-        <Text style={styles.label}>形態</Text>
-        <Dropdown
-          style={styles.dropdown}
-          placeholderStyle={styles.placeholderStyle}
-          selectedTextStyle={styles.selectedTextStyle}
-          data={types}
-          maxHeight={300}
-          labelField='label'
-          valueField='value'
-          placeholder="地域を選択してください。"
-          value={valueOfType}
-          onChange={(item: DropdownItem) => setValueOfType(item.value)}
-        />
-      </View>
-
-      {/* Area and Business Selection */}
-      <View style={styles.inputContainerRow}>
-        <Text style={styles.label}>単価登録</Text>
-        <Dropdown
-          style={styles.dropdown}
-          placeholderStyle={styles.placeholderStyle}
-          selectedTextStyle={styles.selectedTextStyle}
-          data={prices}
-          maxHeight={300}
-          labelField='label'
-          valueField='value'
-          placeholder="地域を選択してください。"
-          value={valueOfPrice}
-          onChange={(item: DropdownItem) => setValueOfPrice(item.value)}
-        />
-      </View>
-
-      <View style={styles.inputContainerRow}>
-        <Text style={styles.label}>等級登録</Text>
-        {/* <View style={[styles.dropdownWrapper, openOfRating && { zIndex: 2000 }]}>
-          <DropDownPicker
-            open={openOfRating}
-            value={valueOfRating}
-            items={ratings}
-            setOpen={setOpenOfRating}
-            setValue={setValueOfRating}
-            setItems={setRatings}
-            placeholder="等級をお選びください。"
-            style={styles.dropdown}
-            maxHeight={200} // This limits the dropdown height to 300, making it scrollable
-            searchable = {true}
-            searchPlaceholder="Search"
-            autoScroll={true}
+      <View style={styles.formContainer}>
+        <View style={styles.inputRow}>
+          <Text style={styles.label}>給与項目名登録</Text>
+          <TextInput
+            style={styles.input}
+            value={salaryItem}
+            onChangeText={setSalaryItem}
           />
-          
-        </View> */}
-        <Dropdown
-          style={styles.dropdown}
-          placeholderStyle={styles.placeholderStyle}
-          selectedTextStyle={styles.selectedTextStyle}
-          data={ratings}
-          maxHeight={300}
-          labelField='label'
-          valueField='value'
-          placeholder="地域を選択してください。"
-          value={valueOfRating}
-          onChange={(item: DropdownItem) => setValueOfRating(item.value)}
-        />
-      </View>
+        </View>
 
-      {/* Register Button */}
-      <TouchableOpacity style={styles.button} onPress={handleRegister}>
-        <Text style={styles.buttonText}>登録ボタン</Text>
-      </TouchableOpacity>
+        <View style={styles.inputRow}>
+          <Text style={styles.label}>形態</Text>
+          <Dropdown
+            style={styles.dropdown}
+            placeholderStyle={styles.placeholderStyle}
+            selectedTextStyle={styles.selectedTextStyle}
+            data={types}
+            maxHeight={300}
+            labelField='label'
+            valueField='value'
+            placeholder="形態を選択してください。"
+            value={valueOfType}
+            onChange={(item: DropdownItem) => setValueOfType(item.value)}
+          />
+        </View>
+
+        <View style={styles.inputRow}>
+          <Text style={styles.label}>単価登録</Text>
+          <Dropdown
+            style={styles.dropdown}
+            placeholderStyle={styles.placeholderStyle}
+            selectedTextStyle={styles.selectedTextStyle}
+            data={prices}
+            maxHeight={300}
+            labelField='label'
+            valueField='value'
+            placeholder="単価を選択してください。"
+            value={valueOfPrice}
+            onChange={(item: DropdownItem) => setValueOfPrice(item.value)}
+          />
+        </View>
+
+        <View style={styles.inputRow}>
+          <Text style={styles.label}>等級登録</Text>
+          <Dropdown
+            style={styles.dropdown}
+            placeholderStyle={styles.placeholderStyle}
+            selectedTextStyle={styles.selectedTextStyle}
+            data={ratings}
+            maxHeight={300}
+            labelField='label'
+            valueField='value'
+            placeholder="等級を選択してください。"
+            value={valueOfRating}
+            onChange={(item: DropdownItem) => setValueOfRating(item.value)}
+          />
+        </View>
+
+        <TouchableOpacity style={styles.button} onPress={handleRegister}>
+          <Text style={styles.buttonText}>登録ボタン</Text>
+        </TouchableOpacity>
+      </View>
     </SafeAreaView>
   );
 };
@@ -188,69 +159,80 @@ const IncentiveSettingsScreen = ({ navigation }: any) => {
 export default IncentiveSettingsScreen;
 
 const styles = StyleSheet.create({
-  container: {
+  safeArea: {
     flex: 1,
     backgroundColor: "#FFFFFF",
-    alignItems: "center",
-    padding: 20,
+    justifyContent: "center",
+    paddingHorizontal: width * 0.05,
+    paddingBottom: 40,
   },
   header: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
     alignItems: "center",
-    marginBottom: 100,
+    paddingVertical: 20,
   },
   headerText: {
-    fontSize: 22,
+    fontSize: width * 0.06,
     fontWeight: "bold",
+    textAlign: "center",
   },
   subtitle: {
-    fontSize: 18,
+    fontSize: width * 0.045,
     color: "#555",
     marginTop: 5,
   },
-  inputContainer: {
-    flexDirection: "row",
-    alignItems: "flex-end",
-    marginBottom: 40,
+  formContainer: {
     width: "100%",
+    // paddingTop: 120,
   },
-  inputContainerRow: {
+  inputRow: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 40,
-    width: "100%",
+    marginBottom: 25,
+    zIndex: 10,
   },
   label: {
-    fontSize: 16,
-    width: 120, // Adjusted for alignment
+    width: "35%",
+    fontSize: width * 0.04,
+    textAlign: "center",
   },
   input: {
     flex: 1,
-    borderBottomWidth: 1,
+    height: 40,
+    borderBottomWidth: 1.5,
     borderBottomColor: "#000",
-    fontSize: 16,
-    padding: 5,
-  },
-  button: {
-    marginTop: 20,
-    backgroundColor: "#2B5DAE",
-    paddingVertical: 12,
-    paddingHorizontal: 30,
-    borderRadius: 5,
-  },
-  buttonText: {
-    color: "#FFFFFF",
-    fontSize: 18,
+    fontSize: width * 0.04,
+    paddingHorizontal: 5,
+    paddingBottom: 5,
   },
   dropdown: {
-    height: 30,
-    width: '65%',
-    borderBottomColor: 'gray',
-    borderBottomWidth: 0.5,
+    flex: 1,
+    height: 40,
+    borderBottomWidth: 1.5,
+    borderBottomColor: "#000",
   },
   placeholderStyle: {
-    fontSize: 16,
+    fontSize: width * 0.04,
+    color: "#999",
   },
   selectedTextStyle: {
-    fontSize: 16,
+    fontSize: width * 0.04,
+  },
+  button: {
+    marginTop: 40,
+    alignItems: "center",
+  },
+  buttonText: {
+    backgroundColor: "#2B5DAE",
+    color: "#FFFFFF",
+    fontSize: width * 0.045,
+    fontWeight: "bold",
+    paddingVertical: 12,
+    paddingHorizontal: 50,
+    borderRadius: 8,
+    textAlign: "center",
   },
 });
