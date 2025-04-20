@@ -209,9 +209,7 @@ const LoginScreen = ({ navigation }: any) => {
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.header}>
         <Text style={styles.headerText}>インセンティブ入力アプリ</Text>
-        <Text style={styles.subtitle}>マスタ</Text>
       </View>
-      <ScrollView contentContainerStyle={styles.scrollContainer}>
 
         <View style={styles.formContainer}>
           <View style={styles.inputContainer}>
@@ -249,7 +247,6 @@ const LoginScreen = ({ navigation }: any) => {
             <Text style={styles.buttonText}>ログイン</Text>
           </TouchableOpacity>
         </View>
-      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -260,10 +257,16 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     backgroundColor: "#FFFFFF",
+    justifyContent: "center",
+    paddingHorizontal: width * 0.05,
+    paddingBottom: 40,
   },
   header: {
-    width: "100%",
-    alignItems: "center",
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    alignItems: 'center',
     paddingVertical: 20,
   },
   headerText: {
