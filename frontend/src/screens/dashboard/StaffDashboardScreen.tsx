@@ -1,5 +1,7 @@
 import React from "react";
-import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, Dimensions } from "react-native";
+
+const { width, height } = Dimensions.get("window");
 
 const StaffDashboardScreen = ({ navigation, route }: any) => {
   const {employee} = route.params;
@@ -11,10 +13,12 @@ const StaffDashboardScreen = ({ navigation, route }: any) => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.safeArea}>
       {/* Header */}
-      <Text style={styles.header}>インセンティブ入力アプリ</Text>
-      <Text style={styles.subHeader}>スタッフ個別ログイン</Text>
+      <View style={styles.header}>
+        <Text style={styles.headerText}>インセンティブ入力アプリ</Text>
+        <Text style={styles.subtitle}>スタッフ</Text>
+      </View>
 
       {/* Buttons Row */}
       <View style={styles.buttonRow}>
@@ -41,21 +45,30 @@ const StaffDashboardScreen = ({ navigation, route }: any) => {
 export default StaffDashboardScreen;
 
 const styles = StyleSheet.create({
-  container: {
+  safeArea: {
     flex: 1,
-    alignItems: "center",
     backgroundColor: "#FFFFFF",
-    padding: 20,
+    justifyContent: "center",
+    paddingHorizontal: width * 0.05,
+    paddingBottom: 40,
   },
   header: {
-    fontSize: 22,
-    fontWeight: "bold",
-    marginTop: 20,
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    alignItems: 'center',
+    paddingVertical: 20,
   },
-  subHeader: {
-    fontSize: 18,
+  headerText: {
+    fontSize: width * 0.06,
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+  subtitle: {
+    fontSize: width * 0.045,
     color: "#555",
-    marginBottom: 220,
+    marginTop: 5,
   },
   buttonRow: {
     flexDirection: "row",

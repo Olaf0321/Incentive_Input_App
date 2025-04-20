@@ -7,12 +7,15 @@ import {
   StyleSheet,
   TouchableOpacity,
   ScrollView,
-  Alert
+  Alert,
+  Dimensions
 } from 'react-native';
 import { Calendar, LocaleConfig } from 'react-native-calendars';
 import SERVER_URL from '../../../config';
 import { Dropdown } from 'react-native-element-dropdown';
 import { format } from 'date-fns';
+
+const { width, height } = Dimensions.get("window");
 
 LocaleConfig.locales['ja'] = {
   monthNames: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
@@ -48,7 +51,7 @@ type EmpData = {
 
 const ActivityScreen = ({ route }: any) => {
   const [notes, setNotes] = useState<{ [date: string]: { item: string; quantity: number }[] }>({});
-  const [incentivesGrade, setIncentivesGrade] = useState<{ [date: string]: number}>({});
+  const [incentivesGrade, setIncentivesGrade] = useState<{ [date: string]: number }>({});
   const [selectedDate, setSelectedDate] = useState<string>('');
   const [dataModalVisible, setDataModalVisible] = useState(false);
   const [inputModalVisible, setInputModalVisible] = useState(false);
@@ -67,14 +70,14 @@ const ActivityScreen = ({ route }: any) => {
     try {
       const response = await fetch(`${SERVER_URL}api/inputPossibility/${status}`, {
         method: 'GET',
-        headers: {"Content-Type": "application/json",}
+        headers: { "Content-Type": "application/json", }
       });
 
       const data = await response.json();
 
       if (date < startDate || date > endDate) {
         Alert.alert('日付が無効であるため入力できません。');
-      } else if (data.status == false){
+      } else if (data.status == false) {
         Alert.alert('管理者によって入力が制限されています。');
       } else {
         setSelectedDate(date);
@@ -228,10 +231,12 @@ const ActivityScreen = ({ route }: any) => {
   }, []);
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.header}>インセンティブ入力アプリ</Text>
-      <Text style={styles.subHeader}>{status}</Text>
-      <Text style={styles.title}>{startDate} ~ {endDate}</Text>
+    <ScrollView contentContainerStyle={styles.safeArea}>
+      <View style={styles.header}>
+        <Text style={styles.headerText}>インセンティブ入力アプリ</Text>
+        <Text style={styles.subtitle}>{status}</Text>
+        <Text style={styles.title}>{startDate} ~ {endDate}</Text>
+      </View>
       <Calendar
         markedDates={getMarkedDates()}
         onDayPress={(day) => {
@@ -345,12 +350,20 @@ const ActivityScreen = ({ route }: any) => {
 };
 
 const styles = StyleSheet.create({
-  container: { padding: 16, backgroundColor: '#fff', minHeight: '100%' },
+  safeArea: {
+    flex: 1,
+    backgroundColor: "#FFFFFF",
+    justifyContent: "center",
+    paddingHorizontal: width * 0.05,
+    paddingBottom: 40,
+  },
   header: {
-    fontSize: 22,
-    fontWeight: "bold",
-    marginTop: 20,
-    marginInline: "auto"
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    alignItems: 'center',
+    paddingVertical: 20,
   },
   subHeader: {
     fontSize: 18,
@@ -358,14 +371,24 @@ const styles = StyleSheet.create({
     marginBottom: 50,
     marginInline: "auto"
   },
+  headerText: {
+    fontSize: width * 0.06,
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+  subtitle: {
+    fontSize: width * 0.045,
+    color: "#555",
+    marginTop: 5,
+  },
   title: {
     fontSize: 18,
     color: "#000000",
-    marginBottom: 40,
+    marginTop: 40,
     marginInline: "auto",
     fontWeight: "bold"
   },
-  modalOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'center', alignItems: 'center'},
+  modalOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'center', alignItems: 'center' },
   modalContent: { width: '85%', backgroundColor: '#fff', padding: 20, borderRadius: 10, marginTop: 20 },
   modalTitle: { fontSize: 18, fontWeight: 'bold', marginBottom: 10 },
   modalSecondTitle: { fontSize: 18, fontWeight: 'bold', marginBottom: 10, marginTop: 20 },
