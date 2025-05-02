@@ -22,7 +22,6 @@ const AreaAndStaffExcelOutput = async (
   
       console.log('✅ Excel saved at:', filePath);
     }
-
   } catch (error: any) {
     Alert.alert('Error', error.message || String(error));
   }
